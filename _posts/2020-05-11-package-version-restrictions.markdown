@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Understanding package version restrictions in Julia"
-date:   2020-05-11 00:42:32 +0200
+date:   2020-05-11 05:42:32 +0200
 categories: julialang
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title:  "Activating project environment in Julia REPL automatically"
 date:   2020-05-10 10:14:07 +0200
-categories: Julia
+categories: julialang
 ---
 
 # Project specific environments in Julia

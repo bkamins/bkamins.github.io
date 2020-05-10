@@ -19,7 +19,7 @@ If not specified otherwise, Julia is started in a default (global) environment.
 Here is a quick example. Start a new Julia session and press `]` to switch to
 package manager mode. You will see the following scrren
 
-{% highlight julia %}
+```
 ~$ julia
                _
    _       _ _(_)_     |  Documentation: https://docs.julialang.org
@@ -31,9 +31,7 @@ package manager mode. You will see the following scrren
 |__/                   |
 
 (@v1.4) pkg>
-
-{% endhighlight %}
-
+```
 
 The `(@v1.4)` prefix tells you that you are in a default environment.
 

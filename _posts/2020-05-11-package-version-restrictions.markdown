@@ -5,6 +5,8 @@ date:   2020-05-11 05:42:32 +0200
 categories: julialang
 ---
 
+This post was written for Julia 1.4.1.
+
 # Dependencies of the packages in Julia
 
 Each package in Julia has a list of other packages it depends on.

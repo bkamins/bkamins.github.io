@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "My practices for managing project dependencies in Julia"
-date:   2020-05-17 06:17:13 +0200
+date:   2020-05-18 06:17:13 +0200
 categories: julialang
 ---
 

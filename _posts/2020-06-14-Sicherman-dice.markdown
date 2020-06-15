@@ -42,7 +42,7 @@ function getdist(d1, d2)
     d = zeros(Rational{Int}, max1 + max2)
     for p1 in d1, p2 in d2
         s = p1 + p2
-            d[s] += 1
+        d[s] += 1
     end
     d .//= length(d1) * length(d2)
     return d

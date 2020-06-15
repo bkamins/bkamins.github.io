@@ -333,4 +333,122 @@ If someone would be interested to make such an implementation and its benchmark
 please contact me with your proposal and I will update this post below,
 giving a solution and a credit to the submitter.
 
+# Update: example Python and R codes
+
+Using the feedback from the readers of the post (thank you for sending it) here
+are example Python and R codes that reproduce the computations.
+
+I think that there are two aspects to compare: code readability and performance.
+As for the comparison of how easy the codes are to understand I leave it for the
+readers of the blog to judge for themselves. Performance can be compared more
+objectively. Both Python and R codes are over 100x slower than Julia.
+
+#### Python code
+
+The code was proposed by [Kevin Squire][ks]. In general it follows the Julia
+implementation exactly. I have minimally edited the original code I have
+received to make it fit better the blog post format.
+
+{% highlight python %}
+import itertools
+from fractions import Fraction
+import numpy as np
+import pandas as pd
+
+def getdist(d1, d2):
+    min1, max1 = min(d1), max(d1)
+    min2, max2 = min(d2), max(d2)
+    assert min1 > 0 and min2 > 0
+    d = np.full(max1 + max2, Fraction(0, 1))
+    for p1 in d1:
+        for p2 in d2:
+            s = p1 + p2
+            d[s - 1] += 1
+    d /= len(d1) * len(d2)
+    return d
+
+NORMAL_DIST = getdist(range(1, 7), range(1, 7))
+
+def issorted(itr):
+    return all(itr[i] <= itr[i + 1] for i in range(len(itr) - 1))
+
+def cross_join(df1, df2, key="_key"):
+    df1[key] = 0
+    df2[key] = 0
+    return df1.merge(df2, on=key, how="outer").drop(columns=key)
+
+def test_dice(x):
+    d1 = tuple(x[:6])
+    d2 = tuple(x[6:])
+    if d1 > d2:
+        return False
+    dist = getdist(d1, d2)
+    if len(dist) != len(NORMAL_DIST):
+        return False
+    return (dist == NORMAL_DIST).all()
+
+df1 = pd.DataFrame(itertools.product(*(range(2, 9) for _ in range(5))),
+                   columns=[1, 2, 3, 4, 5])
+df1.insert(0, 0, 1)
+df1 = df1[df1.apply(issorted, axis=1)].reset_index(drop=True)
+df2 = cross_join(df1, df1)
+df2.columns = [f"{lr}{num}" for lr in ["l", "r"] for num in range(1, 7)]
+df2[df2.apply(test_dice, axis=1)]
+{% endhighlight %}
+
+#### R code
+
+The initial was proposed by [Dai ZJ][dai]. Here, I have made some more changes
+in the code, but left the initial ideas of the original proposal (chiefly, I
+have dropped the dependency on `data.table`, as it did not improve the speed).
+
+In particular note that the code differs in two places from Julia/Python
+implementations:
+
+* I filter out permuted dice using temporary `ID.x` and `ID.y` columns;
+* I use a different strategy for `getdist` implementation, and in particular
+  do not use rational numbers but floats.
+
+In all cases the choice was driven by the fact that I could not find a
+convenient and efficient way to implement the solution to match the original
+Julia codes.
+
+{% highlight r %}
+getdist <- function(d1, d2) {
+  stopifnot(min(d1) > 0 && min(d2) > 0)
+  prop.table(table(rowSums(expand.grid(d1, d2))))
+}
+
+NORMAL_DIST <- getdist(1:6, 1:6)
+
+df1 <- do.call(expand.grid, c(list(1), replicate(5, list(2:8))))
+df1 <- df1[!apply(df1, 1, is.unsorted), ]
+df1$ID <- seq.int(nrow(df1))
+
+df1$dummy <- 1
+df2 <- merge(df1, df1, by = "dummy", allow.cartesian = TRUE)
+df2$dummy <- NULL
+df2 <- df2[df2$ID.x <= df2$ID.y,]
+df2$ID.x <- NULL
+df2$ID.y <- NULL
+
+test_dice <- function(x) {
+  d1 <- as.numeric(x[1:6])
+  d2 <- as.numeric(x[7:12])
+  new_dist <- getdist(d1, d2)
+  if(length(new_dist) == length(NORMAL_DIST)) {
+    if(all(new_dist == NORMAL_DIST)) {
+      if(all(names(new_dist) == names(NORMAL_DIST))) {
+        return(TRUE)
+      }
+    }
+  }
+  return(FALSE)
+}
+
+df2[apply(df2, 1, test_dice), ]
+{% endhighlight %}
+
 [wikipedia]: https://en.wikipedia.org/wiki/Sicherman_dice
+[ks]: https://github.com/kmsquire
+[dai]: https://github.com/xiaodaigh

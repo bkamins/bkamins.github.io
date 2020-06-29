@@ -219,6 +219,89 @@ that I have presented in this post:
   files so that you do not have to pay extra start-up time (but if your script
   does some heavy computations this is probably negligible).
 
+---
+
+# Update --- adding several packages
+
+After writing the post I have realized that I have forgotten that you actually
+can add several packages using `Pkg.add` in one shot.
+So actually you can simply write:
+
+{% highlight julia %}
+    Pkg.add([PackageSpec(name="CSV", version="0.6.1"),
+             PackageSpec(name="DataFrames", version="0.20.1")])
+{% endhighlight %}
+
+to add two packages in their specific versions. In this case
+`preserve=PRESERVE_DIRECT` is not required (unless you add packages to an
+environment that already has some packages that you want to avoid being updated).
+
+The reason is that if you pass several packages in a single call to `Pkg.add` it
+is smart enough to check if all packages can be added in the specified versions.
+
+To see this consider the following example. I assume that you are working on an
+empty project environment (I have cut out some output and replaced it with ...
+to make the listing shorter):
+
+```
+julia> Pkg.status()
+Status `~/Project.toml`
+  (empty environment)
+
+julia> Pkg.add([PackageSpec(name="CategoricalArrays", version="0.5.1"),
+                PackageSpec(name="DataFrames", version="0.18")])
+   Updating registry at `~/.julia/registries/General`
+   Updating git-repo `https://github.com/JuliaRegistries/General.git`
+  Resolving package versions...
+ERROR: Unsatisfiable requirements detected for package DataFrames [a93c6f00]:
+ DataFrames [a93c6f00] log:
+ ├─possible versions are: [0.11.7, 0.12.0, 0.13.0-0.13.1, 0.14.0-0.14.1, 0.15.0-0.15.2, 0.16.0, 0.17.0-0.17.1, 0.18.0-0.18.4, 0.19.0-0.19.4, 0.20.0-0.20.2, 0.21.0-0.21.3] or uninstalled
+ ├─restricted to versions 0.18 by an explicit requirement, leaving only versions 0.18.0-0.18.4
+ └─restricted by compatibility requirements with CategoricalArrays [324d7699] to versions: [0.11.7, 0.12.0, 0.13.0-0.13.1, 0.14.0-0.14.1, 0.15.0-0.15.2] or uninstalled — no versions left
+   └─CategoricalArrays [324d7699] log:
+     ├─possible versions are: [0.3.11, 0.3.13-0.3.14, 0.4.0, 0.5.0-0.5.5, 0.6.0, 0.7.0-0.7.7, 0.8.0-0.8.1] or uninstalled
+     └─restricted to versions 0.5.1 by an explicit requirement, leaving only versions 0.5.1
+Stacktrace:
+...
+
+julia> Pkg.status()
+Status `~/Project.toml`
+  (empty environment)
+
+julia> Pkg.add(PackageSpec(name="CategoricalArrays", version="0.5.1"))
+...
+...
+
+julia> Pkg.status()
+Status `~/Project.toml`
+  [324d7699] CategoricalArrays v0.5.1
+
+julia> Pkg.add(PackageSpec(name="DataFrames", version="0.18"))
+...
+
+julia> Pkg.status()
+Status `~/Project.toml`
+  [324d7699] CategoricalArrays v0.5.5
+  [a93c6f00] DataFrames v0.18
+
+```
+
+In the example you see that we try to install CategoricalArrays.jl 0.5.1 and
+DataFrames.jl version 0.18. The first call to `Pkg.add` specifies both
+packages in one call --- in this case we get an error, as it is not possible
+to have these packages in the specified versions at the same time.
+
+Below I show what would happen if we installed these packages sequentially
+and avoided using `preserve=PRESERVE_DIRECT`. You see that first
+CategoricalArrays.jl is installed in version 0.5.1 and if in the next step you
+install DataFrames.jl in version 0.18 then actually it gets resolved to 0.18.4
+(the latest patch for 0.18 release) and updates CategoricalArrays.jl to version
+0.5.5. If alternatively we would write:
+```
+Pkg.add(PackageSpec(name="DataFrames", version="0.18"), preserve=PRESERVE_DIRECT)
+```
+as the last command we would get an error as in the first call to `Pkg.add`.
+
 [ref1]: https://bkamins.github.io/julialang/2020/05/18/project-workflow.html
 [ref2]: https://bkamins.github.io/julialang/2020/05/11/package-version-restrictions.html
 [ref3]: https://bkamins.github.io/julialang/2020/05/10/julia-project-environments.html

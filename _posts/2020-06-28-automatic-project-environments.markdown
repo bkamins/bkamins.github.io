@@ -259,7 +259,6 @@ ERROR: Unsatisfiable requirements detected for package DataFrames [a93c6f00]:
    └─CategoricalArrays [324d7699] log:
      ├─possible versions are: [0.3.11, 0.3.13-0.3.14, 0.4.0, 0.5.0-0.5.5, 0.6.0, 0.7.0-0.7.7, 0.8.0-0.8.1] or uninstalled
      └─restricted to versions 0.5.1 by an explicit requirement, leaving only versions 0.5.1
-Stacktrace:
 ...
 
 julia> Pkg.status()
@@ -267,7 +266,6 @@ Status `~/Project.toml`
   (empty environment)
 
 julia> Pkg.add(PackageSpec(name="CategoricalArrays", version="0.5.1"))
-...
 ...
 
 julia> Pkg.status()
@@ -281,7 +279,6 @@ julia> Pkg.status()
 Status `~/Project.toml`
   [324d7699] CategoricalArrays v0.5.5
   [a93c6f00] DataFrames v0.18
-
 ```
 
 In the example you see that we try to install CategoricalArrays.jl 0.5.1 and

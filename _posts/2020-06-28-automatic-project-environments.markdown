@@ -219,8 +219,6 @@ that I have presented in this post:
   files so that you do not have to pay extra start-up time (but if your script
   does some heavy computations this is probably negligible).
 
----
-
 # Update --- adding several packages
 
 After writing the post I have realized that I have forgotten that you actually

@@ -52,7 +52,7 @@ formally $$\varepsilon_t > \theta_i(t)$$. Similarly the agent wants to sell an
 asset if $$\varepsilon_t < -\theta_i(t)$$. In other words agents that have high
 $$\theta_i(t)$$ are not very likely to trade, while agents that have it very
 close to $$0$$ trade in almost every period. Also note that if $$\varepsilon_t >
-0$$ then agent either wants to buy or does nothing, while if $$\varepsilon_t >
+0$$ then agent either wants to buy or does nothing, while if $$\varepsilon_t <
 0$$ then agent either wants to sell or does nothing (the case of $$\varepsilon_t
 = 0$$ is degenerated and we leave it unspecified as it will not affect our model
 dynamics).

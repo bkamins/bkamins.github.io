@@ -353,6 +353,23 @@ computing on a single thread. If you are interested please send me your
 implementation of `cont_run` function either via [e-mail][bkamins] on [Julia
 slack][slack].
 
+# Appendix: Implementations provided by the users
+
+Here are the implementations of the model I have received from the users.
+
+#### Rust
+
+[@CGMossa][CGMossa] has prepared a very detailed [Gist][gistmosa] showing his
+Rust implementation of the model and comparing its performance with Julia. I
+think it is great piece of work (and a fully reproducible one) to study Rust
+coding patterns (@CGMossa - thank you for spending your time on this).
+
+In therms of single threaed performance, Julia turns out to be roughly 4x faster
+than Rust for this model. If someone knows how to improve the performance of the
+Rust code I am sure that @CGMossa is open for suggestions and would check them
+out.
+
+
 [agentsjl]: https://github.com/JuliaDynamics/Agents.jl
 [ssw2020]: http://ssc2020.behavelab.org/
 [cont]: https://link.springer.com/chapter/10.1007/978-3-540-34625-8_10
@@ -363,3 +380,5 @@ slack][slack].
 [dice]: https://bkamins.github.io/julialang/2020/06/14/Sicherman-dice.html
 [bkamins]: mailto: bkamins@sgh.waw.pl
 [slack]: https://julialang.slack.com/
+[CGMossa]: https://gist.github.com/CGMossa
+[gistmosa]: https://gist.github.com/CGMossa/dbdd887a7ace8552bb7d68cb5d26aeef

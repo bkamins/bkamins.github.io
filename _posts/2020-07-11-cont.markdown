@@ -353,9 +353,9 @@ computing on a single thread. If you are interested please send me your
 implementation of `cont_run` function either via [e-mail][bkamins] on [Julia
 slack][slack].
 
-# Appendix: Implementations provided by the users
+# Appendix: Implementations provided by the readers
 
-Here are the implementations of the model I have received from the users.
+Here are the implementations of the model I have received from the readers.
 
 #### Rust
 

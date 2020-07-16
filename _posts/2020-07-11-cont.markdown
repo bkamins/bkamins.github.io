@@ -357,6 +357,47 @@ slack][slack].
 
 Here are the implementations of the model I have received from the readers.
 
+#### Python
+
+Tomasz Olczak has sent me a Python port of the code (thank you for working on
+it). It looks as follows:
+
+```
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Jul 16 06:05:24 2020
+
+@author: tolczak@gmail.com (c) 2020
+"""
+
+from numpy import zeros
+from scipy.stats import kurtosis
+from numpy.random import default_rng
+
+rng = default_rng()
+
+def cont_run(time=10000, n=10000, λ=0.05, q=0.1):
+    θ = zeros(n)
+    r = zeros(time)
+    pchange = zeros(n)
+    ε = rng.standard_normal(time)
+    for t in range(time):
+        if ε[t] > 0:
+            r[t] = (ε[t] > θ).sum() / (λ * n)
+        else:
+            r[t] = -(-ε[t] > θ).sum() / (λ * n)
+        θ[rng.random(out=pchange) < q] = abs(r[t])
+    return(kurtosis(r))
+```
+
+It runs roughly 7.5 times slower than the Julia code, which you can check e.g.
+like this:
+```
+>>> from timeit import timeit
+>>> timeit(cont_run, number=10) / 10
+0.7545291750999923
+```
+
 #### Rust
 
 [@CGMossa][CGMossa] has prepared a very detailed [Gist][gistmosa] showing his
@@ -368,7 +409,6 @@ In therms of single threaed performance, Julia turns out to be roughly 4x faster
 than Rust for this model. If someone knows how to improve the performance of the
 Rust code I am sure that @CGMossa is open for suggestions and would check them
 out.
-
 
 [agentsjl]: https://github.com/JuliaDynamics/Agents.jl
 [ssw2020]: http://ssc2020.behavelab.org/

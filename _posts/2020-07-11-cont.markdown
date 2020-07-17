@@ -430,22 +430,22 @@ def cont_run(time=10000, n=10000, λ=0.05, q=0.1):
     return(kurtosis(r))
 ```
 
-This version is faster than the "naive* port, but still slower than Julia code):
+This version is faster than the *naive* port, but still slower than Julia code:
 
 ```
 >>> # 1st run is a warm-up run to allocate pchange and let Numba compile
 >>> pchange = zeros(0)
->>> cont_run()
+>>> cont_run() # the value returned by cont_run is printed
 0.3554457265201094
 >>> # now it's time to gather stats
 >>> from timeit import timeit
->>> timeit(cont_run, number=10) / 10
+>>> timeit(cont_run, number=10) / 10 # timing is printed
 0.5492392050000034
 ```
 
 Note that as of now Numba does not support in-place random number generation (a
 feature introduced only in the latest
-[numpy](http://numpy.org/doc/stable/index.html) v1.19). Hence to archive optimal
+[numpy](http://numpy.org/doc/stable/index.html) v1.19). Hence to achieve optimal
 performance a trick was necessary which was to pre-allocate a `pchange` array
 and pre-populate it with random numbers. This puts additional burden on
 operational memory (and is in favor of Python implementation in general as

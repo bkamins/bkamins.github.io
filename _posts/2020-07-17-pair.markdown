@@ -1,0 +1,211 @@
+---
+layout: post
+title:  "How is => used in DataFrames.jl"
+date:   2020-07-17 08:11:42 +0200
+categories: julialang
+---
+
+# Introduction
+
+A recent [StackOverflow question] prompted me to write down a glossary in what
+cases DataFrames.jl allows the use of `=>`. In this post I summerize it, as
+indeed it has a heavy usage, because `=>` is almost the same as `=` but is
+treated just as a two argument operator in Julia creating a `Pair` object
+(which is much more flexible than `=` which has a very strict allowed usage).
+
+The functions in DataFrames.jl that have a special treatement of `=>` are:
+
+* `DataFrame`, `insertcols!`
+* `select`, `select!`, `transform`, `transform!`, `combine`
+* `filter`, `filter!`
+* `describe`
+* `raname!`, `rename`
+* `innerjoin`, `leftjoin`, `rightjoin`, `outerjoin`, `antijoin`, `semijoin`
+
+I have grouped these functions by the same meaning of `=>`, so as you can see
+it is relatively complex dependent. I describe these usages in sections below.
+
+All examples were run under Julia 1.4.2 and DataFrames.jl 0.21.4. They are meant
+to be executed linearly (so later examples assume that earlier examples were
+run).
+
+# Column assignment: `DataFrame`, `insertcols!`
+
+In this case the syntax is `target_column_name => value` and means that
+`target_column_name` should be set to hold `value`, for example:
+
+```
+julia> using DataFrames
+
+julia> df = DataFrame(:x => 1:4, :y => "a")
+4×2 DataFrame
+│ Row │ x     │ y      │
+│     │ Int64 │ String │
+├─────┼───────┼────────┤
+│ 1   │ 1     │ a      │
+│ 2   │ 2     │ a      │
+│ 3   │ 3     │ a      │
+│ 4   │ 4     │ a      │
+
+julia> insertcols!(df, :a => 'a':'d', :b => exp(1))
+4×4 DataFrame
+│ Row │ x     │ y      │ a    │ b       │
+│     │ Int64 │ String │ Char │ Float64 │
+├─────┼───────┼────────┼──────┼─────────┤
+│ 1   │ 1     │ a      │ 'a'  │ 2.71828 │
+│ 2   │ 2     │ a      │ 'b'  │ 2.71828 │
+│ 3   │ 3     │ a      │ 'c'  │ 2.71828 │
+│ 4   │ 4     │ a      │ 'd'  │ 2.71828 │
+```
+
+# Column transformation: `select`, `select!`, `transform`, `transform!`, `combine`
+
+In this case there are two allowed forms:
+
+* `source_columns => transformation_function => target_column_name`
+* `source_columns => transformation_function` (target column name will be
+  automatically generated)
+* `source_column => target_column_name` (essentially a way to rename a column)
+
+Here are some examples:
+```
+julia> transform(df, :x => maximum)
+4×5 DataFrame
+│ Row │ x     │ y      │ a    │ b       │ x_maximum │
+│     │ Int64 │ String │ Char │ Float64 │ Int64     │
+├─────┼───────┼────────┼──────┼─────────┼───────────┤
+│ 1   │ 1     │ a      │ 'a'  │ 2.71828 │ 4         │
+│ 2   │ 2     │ a      │ 'b'  │ 2.71828 │ 4         │
+│ 3   │ 3     │ a      │ 'c'  │ 2.71828 │ 4         │
+│ 4   │ 4     │ a      │ 'd'  │ 2.71828 │ 4         │
+
+julia> combine(df, :x => maximum => :mx)
+1×1 DataFrame
+│ Row │ mx    │
+│     │ Int64 │
+├─────┼───────┤
+│ 1   │ 4     │
+
+julia> select(df, [:x, :b] => +)
+4×1 DataFrame
+│ Row │ x_b_+   │
+│     │ Float64 │
+├─────┼─────────┤
+│ 1   │ 3.71828 │
+│ 2   │ 4.71828 │
+│ 3   │ 5.71828 │
+│ 4   │ 6.71828 │
+
+julia> transform(df, :a => :b, :b => :a)
+4×4 DataFrame
+│ Row │ x     │ y      │ a       │ b    │
+│     │ Int64 │ String │ Float64 │ Char │
+├─────┼───────┼────────┼─────────┼──────┤
+│ 1   │ 1     │ a      │ 2.71828 │ 'a'  │
+│ 2   │ 2     │ a      │ 2.71828 │ 'b'  │
+│ 3   │ 3     │ a      │ 2.71828 │ 'c'  │
+│ 4   │ 4     │ a      │ 2.71828 │ 'd'  │
+```
+
+(note that what `source_coulumn_names` and `transformation_function` can be is
+quite flexible --- please have a look into the documentation to learn about
+the available options)
+
+# Row selection: `filter`, `filter!`
+
+In this case there allowed form is `source_columns => predicate`, for
+example:
+
+```
+julia> filter(:x => >(1.5), df)
+3×4 DataFrame
+│ Row │ x     │ y      │ a    │ b       │
+│     │ Int64 │ String │ Char │ Float64 │
+├─────┼───────┼────────┼──────┼─────────┤
+│ 1   │ 2     │ a      │ 'b'  │ 2.71828 │
+│ 2   │ 3     │ a      │ 'c'  │ 2.71828 │
+│ 3   │ 4     │ a      │ 'd'  │ 2.71828 │
+```
+
+# Summarizing: `describe`
+
+In this case there allowed form is `target_column_name => aggregation_function`.
+Then `aggregation_function` is applied to every column of a data frame and the
+result is stored in `target_column_name` column. For example:
+
+```
+julia> describe(df, :first => first, :last => last)
+4×3 DataFrame
+│ Row │ variable │ first   │ last    │
+│     │ Symbol   │ Any     │ Any     │
+├─────┼──────────┼─────────┼─────────┤
+│ 1   │ x        │ 1       │ 4       │
+│ 2   │ y        │ a       │ a       │
+│ 3   │ a        │ 'a'     │ 'd'     │
+│ 4   │ b        │ 2.71828 │ 2.71828 │
+```
+
+# Names transformation: `raname!`, `rename`
+
+The form is `source_column => target_column_name` to rename `source_column` to
+`target_column_name`, e.g.:
+
+```
+julia> rename(df, "x" => "xx", "y" => "yy")
+4×4 DataFrame
+│ Row │ xx    │ yy     │ a    │ b       │
+│     │ Int64 │ String │ Char │ Float64 │
+├─────┼───────┼────────┼──────┼─────────┤
+│ 1   │ 1     │ a      │ 'a'  │ 2.71828 │
+│ 2   │ 2     │ a      │ 'b'  │ 2.71828 │
+│ 3   │ 3     │ a      │ 'c'  │ 2.71828 │
+│ 4   │ 4     │ a      │ 'd'  │ 2.71828 │
+
+julia> rename(df, 1 => :xx, 2 => :yy)
+4×4 DataFrame
+│ Row │ xx    │ yy     │ a    │ b       │
+│     │ Int64 │ String │ Char │ Float64 │
+├─────┼───────┼────────┼──────┼─────────┤
+│ 1   │ 1     │ a      │ 'a'  │ 2.71828 │
+│ 2   │ 2     │ a      │ 'b'  │ 2.71828 │
+│ 3   │ 3     │ a      │ 'c'  │ 2.71828 │
+│ 4   │ 4     │ a      │ 'd'  │ 2.71828 │
+```
+
+# Joining: `innerjoin`, `leftjoin`, `rightjoin`, `outerjoin`, `antijoin`, `semijoin`
+
+Here, you can pass `left_column => right_column` as an `on` keyword argument
+in the case when left and right joined data frames have different names of
+columns on which the join should be performed, for instance:
+
+```
+julia> innerjoin(df, df2, on = :x => :x2)
+4×5 DataFrame
+│ Row │ x     │ y      │ a    │ b       │ a2   │
+│     │ Int64 │ String │ Char │ Float64 │ Char │
+├─────┼───────┼────────┼──────┼─────────┼──────┤
+│ 1   │ 1     │ a      │ 'a'  │ 2.71828 │ 'a'  │
+│ 2   │ 2     │ a      │ 'b'  │ 2.71828 │ 'b'  │
+│ 3   │ 3     │ a      │ 'c'  │ 2.71828 │ 'c'  │
+│ 4   │ 4     │ a      │ 'd'  │ 2.71828 │ 'd'  │
+
+julia> innerjoin(df, df2, on = ["x" => "x2", "a" => "a2"])
+4×4 DataFrame
+│ Row │ x     │ y      │ a    │ b       │
+│     │ Int64 │ String │ Char │ Float64 │
+├─────┼───────┼────────┼──────┼─────────┤
+│ 1   │ 1     │ a      │ 'a'  │ 2.71828 │
+│ 2   │ 2     │ a      │ 'b'  │ 2.71828 │
+│ 3   │ 3     │ a      │ 'c'  │ 2.71828 │
+│ 4   │ 4     │ a      │ 'd'  │ 2.71828 │
+
+```
+
+(in the second example we have performed join on two pairs of columns)
+
+<br>
+
+I hope that you will find the examples provided above useful when working with
+DataFrames.jl!
+
+[soq]: https://stackoverflow.com/questions/62759888/what-is-the-purpose-of-in-julia/62760106#62760106

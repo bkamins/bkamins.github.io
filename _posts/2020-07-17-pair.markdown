@@ -22,7 +22,7 @@ The functions in DataFrames.jl that have a special treatement of `=>` are:
 * `select`, `select!`, `transform`, `transform!`, `combine`
 * `filter`, `filter!`
 * `describe`
-* `raname!`, `rename`
+* `rename!`, `rename`
 * `innerjoin`, `leftjoin`, `rightjoin`, `outerjoin`, `antijoin`, `semijoin`
 
 I have grouped these functions by the same meaning of `=>`, so as you can see
@@ -148,7 +148,7 @@ julia> describe(df, :first => first, :last => last)
 │ 4   │ b        │ 2.71828 │ 2.71828 │
 ```
 
-# Names transformation: `raname!`, `rename`
+# Names transformation: `rename!`, `rename`
 
 The form is `source_column => target_column_name` to rename `source_column` to
 `target_column_name`, e.g.:

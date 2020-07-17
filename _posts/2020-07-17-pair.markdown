@@ -7,11 +7,14 @@ categories: julialang
 
 # Introduction
 
-A recent [StackOverflow question] prompted me to write down a glossary in what
-cases DataFrames.jl allows the use of `=>`. In this post I summerize it, as
-indeed it has a heavy usage, because `=>` is almost the same as `=` but is
-treated just as a two argument operator in Julia creating a `Pair` object
-(which is much more flexible than `=` which has a very strict allowed usage).
+A recent [StackOverflow question][soq] prompted me to write down a glossary in
+what cases DataFrames.jl allows the use of `=>`. In this post I summarize it, as
+indeed it has a heavy usage.
+
+Essentially in many places we use `=>` instead of `=`. The difference is that
+`=>` is treated by the Julia parser as a two argument operator in Julia creating
+a `Pair` object (which is much more flexible than `=` which has a very strict
+allowed usage and it is possible to dispatch on `Pair`).
 
 The functions in DataFrames.jl that have a special treatement of `=>` are:
 
@@ -23,7 +26,7 @@ The functions in DataFrames.jl that have a special treatement of `=>` are:
 * `innerjoin`, `leftjoin`, `rightjoin`, `outerjoin`, `antijoin`, `semijoin`
 
 I have grouped these functions by the same meaning of `=>`, so as you can see
-it is relatively complex dependent. I describe these usages in sections below.
+its meaning is context dependent. I describe these usages in sections below.
 
 All examples were run under Julia 1.4.2 and DataFrames.jl 0.21.4. They are meant
 to be executed linearly (so later examples assume that earlier examples were
@@ -60,7 +63,7 @@ julia> insertcols!(df, :a => 'a':'d', :b => exp(1))
 
 # Column transformation: `select`, `select!`, `transform`, `transform!`, `combine`
 
-In this case there are two allowed forms:
+In this case there are three allowed forms:
 
 * `source_columns => transformation_function => target_column_name`
 * `source_columns => transformation_function` (target column name will be
@@ -174,9 +177,9 @@ julia> rename(df, 1 => :xx, 2 => :yy)
 
 # Joining: `innerjoin`, `leftjoin`, `rightjoin`, `outerjoin`, `antijoin`, `semijoin`
 
-Here, you can pass `left_column => right_column` as an `on` keyword argument
-in the case when left and right joined data frames have different names of
-columns on which the join should be performed, for instance:
+Here, you can pass `left_column_name => right_column_name` as an `on` keyword
+argument in the case when left and right joined data frames have different names
+of columns on which the join should be performed, for instance:
 
 ```
 julia> innerjoin(df, df2, on = :x => :x2)

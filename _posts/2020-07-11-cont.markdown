@@ -359,17 +359,11 @@ Here are the implementations of the model I have received from the readers.
 
 #### Python
 
-Tomasz Olczak has sent me a Python port of the code (thank you for working on
-it). It looks as follows:
+[Tomasz Olczak](mailto:tolczak@gmail.com) has sent me Python ports of the code
+(thank you for working on it). The first *naive* version is almost identical to
+Julia code:
 
 ```
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jul 16 06:05:24 2020
-
-@author: tolczak@gmail.com (c) 2020
-"""
-
 from numpy import zeros
 from scipy.stats import kurtosis
 from numpy.random import default_rng
@@ -392,11 +386,78 @@ def cont_run(time=10000, n=10000, λ=0.05, q=0.1):
 
 It runs roughly 7.5 times slower than the Julia code, which you can check e.g.
 like this:
+
 ```
 >>> from timeit import timeit
 >>> timeit(cont_run, number=10) / 10
 0.7545291750999923
 ```
+
+Next goes an *optimized* version which uses
+[Numba](http://numba.pydata.org/numba-doc/latest/index.html) for run-time LLVM
+compilation to machine code:
+
+```
+from numpy import zeros
+from scipy.stats import kurtosis
+from numpy.random import default_rng, standard_normal
+from numba import njit
+
+rng = default_rng()
+
+# from numpy.random import Generator, MT19937
+# rng = Generator(MT19937(12345))
+
+@njit(parallel=False)
+def _numba(time, n, λ, q, pchange):
+    θ = zeros(n)
+    r = zeros(time)
+    ε = standard_normal(time)
+    for t in range(time):
+        if ε[t] > 0:
+            r[t] = (ε[t] > θ).sum() / (λ * n)
+        else:
+            r[t] = -(-ε[t] > θ).sum() / (λ * n)
+        θ[pchange[t] < q] = abs(r[t])
+    return(r)
+
+def cont_run(time=10000, n=10000, λ=0.05, q=0.1):
+    global pchange
+    if pchange.shape != (time, n):
+        pchange = zeros((time, n))
+    rng.random(out=pchange)
+    r = _numba(time, n, λ, q, pchange)
+    return(kurtosis(r))
+```
+
+This version is faster than the "naive* port, but still slower than Julia code):
+
+```
+>>> # 1st run is a warm-up run to allocate pchange and let Numba compile
+>>> pchange = zeros(0)
+>>> cont_run()
+0.3554457265201094
+>>> # now it's time to gather stats
+>>> from timeit import timeit
+>>> timeit(cont_run, number=10) / 10
+0.5492392050000034
+```
+
+Note that as of now Numba does not support in-place random number generation (a
+feature introduced only in the latest
+[numpy](http://numpy.org/doc/stable/index.html) v1.19). Hence to archive optimal
+performance a trick was necessary which was to pre-allocate a `pchange` array
+and pre-populate it with random numbers. This puts additional burden on
+operational memory (and is in favor of Python implementation in general as
+in the Julia code we allocate `pchange` on each call of `cont_run`).
+
+In addition note that after porting to Numba most of the total processing time
+is spent on random number generation. This seems to be a real performance
+bottleneck and it becomes even worse if a different random number generator is
+used (try switching to Mersenne Twister that is used in Julia by uncommenting
+relevant lines). Find more on random number generation in Python
+[here](http://numpy.org/doc/stable/reference/random/index.html).
+
 
 #### Rust
 

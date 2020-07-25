@@ -27,7 +27,7 @@ directions.
 
 [juliacon]: https://juliacon.org/2020/
 [pszufe]: https://szufel.pl/en_aboutme.html
-[graphs]: [https://live.juliacon.org/talk/GX8QCX]
+[graphs]: https://live.juliacon.org/talk/GX8QCX
 [df]: https://live.juliacon.org/talk/8SFYHK
 [dfrepo]: https://github.com/bkamins/JuliaCon2020-DataFrames-Tutorial
 [bof]: https://live.juliacon.org/talk/CA3SET

@@ -258,6 +258,17 @@ functionality is also available via a package manager, which you enter by
 pressing `]` in the Julia command line. The names of the commands are the same,
 and you can get help on them by writing e.g. `help add`.
 
+Finally, let me add one more comment, as this issue has raised some discussion.
+The methods I describe for adding packages (with `preserve=PRESERVE_DIRECT`) and
+updating them (with `level=UPDATELEVEL_PATCH`) are meant to be a safe way to
+perform these operations (so as I have written in the introduction this is an
+option to be aware of). The core idea is that when working with production
+code you want to:
+* separate steps of adding new packages and updating packages you already have
+  in your project;
+* avoid package updates to introduce breaking changes in your dependencies
+  unless you explicitly allow for this.
+
 [juliahub]: https://juliahub.com/ui/Home
 [projecttoml]: https://julialang.github.io/Pkg.jl/dev/toml-files/
 [activate]: https://bkamins.github.io/julialang/2020/05/10/julia-project-environments.html

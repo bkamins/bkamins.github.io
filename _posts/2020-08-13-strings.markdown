@@ -1,0 +1,298 @@
+---
+layout: post
+title:  "The String, or There and Back Again"
+date:   2020-08-13 13:12:01 +0200
+categories: julialang
+---
+
+# Introduction
+
+The `String` type in the Julia language supports the full range of Unicode
+characters, which is great in practice. Other features that are important
+when working with the `String` type (especially when you need performance)
+are the following:
+* `String` is immutable, but it is not [interned][intern] (notably `Symbol`s are
+  interned and thus can be compared using `===` fast);
+* taking a single character from a `String` produces a `Char`, which is a 32-bit
+  value;
+* Julia Base normally assumes that `String` is UTF-8 encoded which is handy
+  because most likely your source is UTF-8 encoded and in general UTF-8 has
+  a reasonably compact memory footprint (but `String`s that contain invalid
+  encodings are allowed to be constructed, and it is possible to
+  [`transcode`][transcode] strings).
+
+While I think that the Julia manual [Section on Strings][strings] does a very
+good job explaining how they work I often find that people are confused by the
+consequences of UTF-8 encoding of `String` and this post is intended to cover
+this ground a bit more in depth.
+
+All what I write here was tested under Julia 1.5.
+
+# Two types of indices for `String`
+
+
+Since `String` is UTF-8 encoded one character is represented by 1, 2, 3, or 4
+bytes in it, see e.g. [Wikipedia][utf8] for the details of the encoding.
+In Julia you can check that indeed one code unit of `String` is one byte by
+writing (I am storing the `String` in the `str` variable as we will soon use it
+again):
+```
+julia> str = "😄 Hello! 👋"
+"😄 Hello! 👋"
+
+julia> codeunit(str)
+UInt8
+```
+
+Now this string contains `10` characters, which you can check using the
+`length` function:
+```
+julia> length(str)
+10
+```
+but it is actually stored on more bytes, which the `ncodeunits` function tells us:
+```
+julia> ncodeunits(str)
+16
+```
+The reason is that the first and last character in this string are not ASCII
+(note that in UTF-8 all ASCII characters are stored on one byte), which we can
+check in the following way:
+```
+julia> foreach(c -> println(repr(c), ":\t", ncodeunits(c)), str)
+'😄':    4
+' ':    1
+'H':    1
+'e':    1
+'l':    1
+'l':    1
+'o':    1
+'!':    1
+' ':    1
+'👋':    4
+```
+
+Given these observations the natural questions are:
+* how to get the `i`-th code unit in the `String` (so called byte index);
+* how to get the `i`-th character in the `String` (so called character index);
+* is is easy to go '*There and Back Again*' between byte and character indices;
+* which functions expect byte indices, which expect character indices and what
+  is the cost of using these functions.
+
+Below I try to answer these questions.
+
+# Getting code units
+
+Getting the `i`-th code unit is simple (but in practice rarely needed, except
+if you are working with strings on low level), you just use the `codeunit`
+function, e.g.:
+```
+julia> codeunit(str, 1)
+0xf0
+
+julia> codeunit(str, 2)
+0x9f
+
+julia> codeunit(str, 3)
+0x98
+
+julia> codeunit(str, 4)
+0x84
+
+julia> codeunit(str, 5)
+0x20
+```
+or you can use the `codeunits` function to get them as a vector:
+```
+julia> codeunits(str)
+16-element Base.CodeUnits{UInt8,String}:
+ 0xf0
+ 0x9f
+ 0x98
+ 0x84
+ 0x20
+ 0x48
+ 0x65
+ 0x6c
+ 0x6c
+ 0x6f
+ 0x21
+ 0x20
+ 0xf0
+ 0x9f
+ 0x91
+ 0x8b
+```
+
+# Getting characters
+
+Now, this is more tricky:
+```
+julia> str[1]
+'😄': Unicode U+1F604 (category So: Symbol, other)
+
+julia> str[5]
+' ': ASCII/Unicode U+0020 (category Zs: Separator, space)
+
+julia> str[2]
+ERROR: StringIndexError("😄 Hello! 👋", 2)
+```
+and you see that the `getindex` function in the `str[i]` syntax does not give
+you the `i`-th character in the string but rather a character that starts in the
+`i`-th byte index in the string (and errors if at this given byte index the
+character does not start).
+
+So how should one get the `i`-th character in the string? Use the `nextind`
+function in the following way:
+```
+julia> str[nextind(str, 0, 1)]
+'😄': Unicode U+1F604 (category So: Symbol, other)
+
+julia> str[nextind(str, 0, 2)]
+' ': ASCII/Unicode U+0020 (category Zs: Separator, space)
+```
+where you pass `0` as the first argument and the desired character index as a
+second argument.
+
+You might ask why this is so awkward? The reason is that computing the location
+of `i`-th character in the string is expensive, so normally one should use byte
+indexing. Notably, most functions working on strings take byte indices and only
+one function --- `length` --- returns number of characters, all other functions
+return byte indices or number of bytes (more on this below in the glossary
+section).
+
+For example (we store `loc` as we will use it later also):
+```
+julia> loc = findfirst(==('H'), str)
+6
+
+julia> str[loc]
+'H': ASCII/Unicode U+0048 (category Lu: Letter, uppercase)
+```
+and this is fast.
+
+Be warned though that when you use byte indexing you should not do arithmetics
+on them (unless your string is ASCII only, which you can check using the
+[`isascii`][isascii] function). For instance if you want to go back two characters from `H`
+do not write:
+```
+julia> str[loc - 2]
+ERROR: StringIndexError("😄 Hello! 👋", 4)
+```
+but rather write:
+```
+julia> str[prevind(str, loc, 2)]
+'😄': Unicode U+1F604 (category So: Symbol, other)
+```
+and let `prevind` do the calculation of an appropriate byte index. Trying to do
+arithmetics on byte indices is the most common error when working with `String`s
+in Julia.
+
+Finally it is easy to get all byte indices that point to the start of the
+character in the string with the `eachindex` function:
+```
+julia> foreach(i -> println("$i:\t$(repr(str[i]))"),  eachindex(str))
+1:  '😄'
+5:  ' '
+6:  'H'
+7:  'e'
+8:  'l'
+9:  'l'
+10: 'o'
+11: '!'
+12: ' '
+13: '👋'
+```
+
+# Going there and back again between byte and character indices
+
+If you have a byte index and want to find character index of a character that
+covers this code unit then write:
+```
+julia> length(str, 1, loc)
+3
+```
+Note that byte index does not have to be a valid start of a character. In this
+case the index of the character that contains this index is returned:
+```
+julia> length(str, 1, 1)
+1
+
+julia> length(str, 1, 2)
+1
+
+julia> length(str, 1, 3)
+1
+
+julia> length(str, 1, 4)
+1
+
+julia> length(str, 1, 5)
+2
+```
+(byte index `5` corresponds to the second character in the string)
+
+If you have a character index and want to learn the byte index of this character
+in the `String` we already know we should use the `nextind` function. For example:
+```
+julia> nextind(str, 0, 3)
+6
+```
+gets you the byte index of `'H'` character in the string.
+
+# The glossary
+
+Below I present the list of functions available in Julia Base that work with
+strings with a comment if they work with byte or character indices and
+information about their time complexity for `String` type. I omit the
+description what the functions do to keep the table brief and I list only the
+functions that either take or return an index or byte/character number.
+
+| Funtion         | arguments       | return value      | complexity |
+|-----------------|-----------------|--------------------------------|
+| `length`        | byte index      | characters        | O(n)       |
+| `ncodeunits`    |                 | bytes             | O(1)       |
+| `sizeof`        |                 | bytes             | O(1)       |
+| `codeunit`      | byte index      |                   | O(1)       |
+| `isvalid`       | byte index      |                   | O(1)       |
+| `getindex`      | byte index      |                   | O(1)       |
+| `SubString`     | byte index      |                   | O(1)       |
+| `view`, `@view` | byte index      |                   | O(1)       |
+| `unsafe_string` | byte index      |                   | O(1)       |
+| `match`         | byte index      |                   | O(n)       |
+| `findfirst`     |                 | byte index        | O(n)       |
+| `findlast`      |                 | byte index        | O(n)       |
+| `findnext`      |                 | byte index        | O(n)       |
+| `findprev`      |                 | byte index        | O(n)       |
+| `firstindex`    |                 | byte index        | O(1)       |
+| `lastindex`     |                 | byte index        | O(1)       |
+| `thisind`       | byte index      | byte index        | O(1)       |
+| `prevind`       | `i`: byte index, `n`: characters | byte index | O(n) |
+| `nextind`       | `i`: byte index, `n`: characters | byte index | O(n) |
+| `chop`          | character index |                   | O(n)       |
+| `first`         | character index |                   | O(n)       |
+| `last`          | character index |                   | O(n)       |
+| `lpad`          | characters      |                   | O(n)       |
+| `rpad`          | characters      |                   | O(n)       |
+| `textwidth`     |                 | screen characters | O(n)       |
+
+(note that `nextind` and `prevind` are `O(n)` for `n`, but for `i` they are
+`O(1)` as UTF-8 is self-synchronizing)
+
+# Conclusions
+
+I must admit that working with the `String` type can be sometimes tricky, but I
+hope that the summary I have presented in this post will help you easier
+navigate through the options.
+
+Finally `String` is not the only string type available in the Julia language.
+Actually most functions just work with any `AbstractString` and there are
+alternative string types developed in the community, you can check them out
+for example [here][juliastrings].
+
+[intern]: https://en.wikipedia.org/wiki/String_interning
+[strings]: https://docs.julialang.org/en/v1/manual/strings/
+[utf8]: https://en.wikipedia.org/wiki/UTF-8
+[transcode]: https://docs.julialang.org/en/v1/base/strings/#Base.transcode
+[isascii]: https://docs.julialang.org/en/v1/base/strings/#Base.isascii
+[juliastrings]: https://github.com/JuliaString

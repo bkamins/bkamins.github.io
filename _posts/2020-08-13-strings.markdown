@@ -276,8 +276,11 @@ functions that either take or return an index or byte/character number.
 | `rpad`          | characters      |                   | O(n)       |
 | `textwidth`     |                 | screen characters | O(n)       |
 
-(note that `nextind` and `prevind` are `O(n)` for `n`, but for `i` they are
-`O(1)` as UTF-8 is self-synchronizing)
+Note that `nextind` and `prevind` are `O(n)` for `n`, but for `i` they are
+`O(1)` as UTF-8 is self-synchronizing. Also, in general, this table gives a very
+simplified view of cost of different operations, especially these that involve
+two strings --- I have just chatted with @StottPJones on Slack about it and if
+you are interested in these topics you can reach out to him there.
 
 # Conclusions
 

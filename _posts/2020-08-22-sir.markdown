@@ -374,6 +374,12 @@ simulations I wanted to show in this post:
   think about the problem you solve, barring you do not respect general
   performance recommendations described [here][perf] in the Julia manual.
 
+# Reader feedback
+
+After the post I have received feedback from [CGMossa][cgmossa] with a Rust
+implementation of my code. I really recommend to check it out as there is a lot
+to learn about Rust from this code. You can find it [here][rust].
+
 [post]: https://bkamins.github.io/julialang/2020/07/11/cont.html
 [ssw2020]: http://ssc2020.behavelab.org/
 [psz]: https://szufel.pl/en_aboutme.html
@@ -382,3 +388,5 @@ simulations I wanted to show in this post:
 [oldagents]: https://juliasnippets.blogspot.com/2018/07/abc-of-abm-in-julia.html
 [SO]: https://stackoverflow.com/questions/63530966/what-went-wrong-with-my-julia-loops-devectorized-code
 [perf]: https://docs.julialang.org/en/v1/manual/performance-tips/
+[cgmossa]: https://github.com/CGMossa
+[rust]: https://github.com/CGMossa/bkamins_sir_abm

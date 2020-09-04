@@ -1,0 +1,149 @@
+---
+layout: post
+title:  "Separating a column into multiple columns in DataFrames.jl"
+date:   2020-09-04 15:35:23 +0200
+categories: julialang
+---
+
+# Introduction
+
+Recently several users have asked how one can split one column into several
+columns in [DataFrames.jl][df].
+
+A functionality of this kind is provided e.g. in dplyr by the [`spread`][spread]
+function, but we are currently missing it in DataFrames.jl.
+
+In this post I comment how to obtain the expected behavior in the current version
+of DataFrames.jl (i.e. v21) with a little help of the [SplitApplyCombine.jl][sac]
+pakage.
+
+The codes were tested under Julia 1.5, DataFrames.jl 0.21,
+and SplitApplyCombine.jl 1.1.
+
+# Spreading a column
+
+For our example I use the data I have found in [this post][post] about most
+popular first and last name combinations in the United States:
+
+```
+julia> using DataFrames
+
+julia> df = DataFrame(name=["James Smith", "Michael Smith", "Robert Smith",
+                            "Maria Garcia", "David Smith", "Maria Rodriguez",
+                            "Mary Smith", "Maria Hernandez", "Maria Martinez",
+                            "James Johnson"],
+                      freq=[38_313, 34_810, 34_269, 32_092, 31_294,
+                            30_507, 28_692, 27_836, 26_956, 26_850])
+10×2 DataFrame
+│ Row │ name            │ freq  │
+│     │ String          │ Int64 │
+├─────┼─────────────────┼───────┤
+│ 1   │ James Smith     │ 38313 │
+│ 2   │ Michael Smith   │ 34810 │
+│ 3   │ Robert Smith    │ 34269 │
+│ 4   │ Maria Garcia    │ 32092 │
+│ 5   │ David Smith     │ 31294 │
+│ 6   │ Maria Rodriguez │ 30507 │
+│ 7   │ Mary Smith      │ 28692 │
+│ 8   │ Maria Hernandez │ 27836 │
+│ 9   │ Maria Martinez  │ 26956 │
+│ 10  │ James Johnson   │ 26850 │
+```
+
+We want to spread `:name` column into `:first` and `:last` columns holding first
+and last name respectively.
+
+Here is how one can do it using just Julia Base:
+```
+julia> tmp = split.(df.name)
+10-element Array{Array{SubString{String},1},1}:
+ ["James", "Smith"]
+ ["Michael", "Smith"]
+ ["Robert", "Smith"]
+ ["Maria", "Garcia"]
+ ["David", "Smith"]
+ ["Maria", "Rodriguez"]
+ ["Mary", "Smith"]
+ ["Maria", "Hernandez"]
+ ["Maria", "Martinez"]
+ ["James", "Johnson"]
+
+julia> insertcols!(df, [n => getindex.(tmp, i) for (i, n) in
+                        enumerate([:first, :last])]...)
+10×4 DataFrame
+│ Row │ name            │ freq  │ first    │ last      │
+│     │ String          │ Int64 │ SubStri… │ SubStrin… │
+├─────┼─────────────────┼───────┼──────────┼───────────┤
+│ 1   │ James Smith     │ 38313 │ James    │ Smith     │
+│ 2   │ Michael Smith   │ 34810 │ Michael  │ Smith     │
+│ 3   │ Robert Smith    │ 34269 │ Robert   │ Smith     │
+│ 4   │ Maria Garcia    │ 32092 │ Maria    │ Garcia    │
+│ 5   │ David Smith     │ 31294 │ David    │ Smith     │
+│ 6   │ Maria Rodriguez │ 30507 │ Maria    │ Rodriguez │
+│ 7   │ Mary Smith      │ 28692 │ Mary     │ Smith     │
+│ 8   │ Maria Hernandez │ 27836 │ Maria    │ Hernandez │
+│ 9   │ Maria Martinez  │ 26956 │ Maria    │ Martinez  │
+│ 10  │ James Johnson   │ 26850 │ James    │ Johnson   │
+```
+
+The code is a bit verbose and uses a temporaty variable. We could have written the
+second step also e.g. like this:
+```
+for (i, n) in enumerate([:first, :last])
+    df[!, n] = getindex.(tmp, i)
+end
+```
+but it is still quite verbose.
+
+We can have a shorter code and avoid a temporary variable using the `invert`
+function from SplitApplyCombine.jl:
+```
+julia> using SplitApplyCombine
+
+julia> insertcols!(df, ([:first, :last] .=> invert(split.(df.name)))...,
+                   makeunique=true)
+10×6 DataFrame
+│ Row │ name            │ freq  │ first    │ last      │ first_1  │ last_1    │
+│     │ String          │ Int64 │ SubStri… │ SubStrin… │ SubStri… │ SubStrin… │
+├─────┼─────────────────┼───────┼──────────┼───────────┼──────────┼───────────┤
+│ 1   │ James Smith     │ 38313 │ James    │ Smith     │ James    │ Smith     │
+│ 2   │ Michael Smith   │ 34810 │ Michael  │ Smith     │ Michael  │ Smith     │
+│ 3   │ Robert Smith    │ 34269 │ Robert   │ Smith     │ Robert   │ Smith     │
+│ 4   │ Maria Garcia    │ 32092 │ Maria    │ Garcia    │ Maria    │ Garcia    │
+│ 5   │ David Smith     │ 31294 │ David    │ Smith     │ David    │ Smith     │
+│ 6   │ Maria Rodriguez │ 30507 │ Maria    │ Rodriguez │ Maria    │ Rodriguez │
+│ 7   │ Mary Smith      │ 28692 │ Mary     │ Smith     │ Mary     │ Smith     │
+│ 8   │ Maria Hernandez │ 27836 │ Maria    │ Hernandez │ Maria    │ Hernandez │
+│ 9   │ Maria Martinez  │ 26956 │ Maria    │ Martinez  │ Maria    │ Martinez  │
+│ 10  │ James Johnson   │ 26850 │ James    │ Johnson   │ James    │ Johnson   │
+
+```
+In this call I have used `makeunique=true` as we update the `df` data frame in
+place and it already contains `:first` and `:last` columns.
+
+So the code is not that long, but admittedly `spread` in dplyr is shorter.
+
+Before we finish let us see what the `invert` function produces when applied
+to the `tmp` variable we have created above:
+```
+julia> invert(tmp)
+2-element Array{Array{SubString{String},1},1}:
+ ["James", "Michael", "Robert", "Maria", "David", "Maria", "Mary", "Maria",
+ "Maria", "James"]
+ ["Smith", "Smith", "Smith", "Garcia", "Smith", "Rodriguez", "Smith",
+ "Hernandez", "Martinez", "Johnson"]
+```
+As you can see it takes a *container of containers* and reverses the order
+of nesting.
+
+# Conclusion
+
+If you feel that it would be good to have an in-built function in DataFrames.jl
+that would do splitting of columns in a data frame please leave a comment in
+[this issue][issue].
+
+[df]: https://github.com/JuliaData/DataFrames.jl
+[spread]: https://tidyr.tidyverse.org/reference/spread.html
+[post]: https://blogs.ancestry.com/cm/calling-james-smith-10-most-common-first-and-surname-combinations/
+[issue]: https://github.com/JuliaData/DataFrames.jl/issues/2375
+[sac]: https://github.com/JuliaData/SplitApplyCombine.jl

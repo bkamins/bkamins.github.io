@@ -10,7 +10,7 @@ categories: julialang
 Recently several users have asked how one can split one column into several
 columns in [DataFrames.jl][df].
 
-A functionality of this kind is provided e.g. in dplyr by the [`spread`][spread]
+A functionality of this kind is provided e.g. in dplyr by the [`separate`][separate]
 function, but we are currently missing it in DataFrames.jl.
 
 In this post I comment how to obtain the expected behavior in the current version
@@ -143,7 +143,7 @@ that would do splitting of columns in a data frame please leave a comment in
 [this issue][issue].
 
 [df]: https://github.com/JuliaData/DataFrames.jl
-[spread]: https://tidyr.tidyverse.org/reference/spread.html
+[separate]: https://tidyr.tidyverse.org/reference/separate.html
 [post]: https://blogs.ancestry.com/cm/calling-james-smith-10-most-common-first-and-surname-combinations/
 [issue]: https://github.com/JuliaData/DataFrames.jl/issues/2375
 [sac]: https://github.com/JuliaData/SplitApplyCombine.jl

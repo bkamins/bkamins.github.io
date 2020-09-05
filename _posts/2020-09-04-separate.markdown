@@ -20,7 +20,7 @@ pakage.
 The codes were tested under Julia 1.5, DataFrames.jl 0.21,
 and SplitApplyCombine.jl 1.1.
 
-# Spreading a column
+# Separating a column
 
 For our example I use the data I have found in [this post][post] about most
 popular first and last name combinations in the United States:
@@ -50,7 +50,7 @@ julia> df = DataFrame(name=["James Smith", "Michael Smith", "Robert Smith",
 │ 10  │ James Johnson   │ 26850 │
 ```
 
-We want to spread `:name` column into `:first` and `:last` columns holding first
+We want to separate `:name` column into `:first` and `:last` columns holding first
 and last name respectively.
 
 Here is how one can do it using just Julia Base:
@@ -121,7 +121,7 @@ julia> insertcols!(df, ([:first, :last] .=> invert(split.(df.name)))...,
 In this call I have used `makeunique=true` as we update the `df` data frame in
 place and it already contains `:first` and `:last` columns.
 
-So the code is not that long, but admittedly `spread` in dplyr is shorter.
+So the code is not that long, but admittedly `separate` in dplyr is shorter.
 
 Before we finish let us see what the `invert` function produces when applied
 to the `tmp` variable we have created above:

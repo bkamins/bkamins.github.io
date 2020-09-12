@@ -32,11 +32,14 @@ when the exact schedule is out).
 Additionally in the second part of the post I show an example how you can
 perform simple data modeling tasks using Julia.
 
-In the examples here I use Julia 1.5rc1, StatsBase v0.33.0, DataFrames v0.21.4,
+In the examples here I use Julia 1.5, StatsBase v0.33.0, DataFrames v0.21.4,
 GLM v1.3.9, Optim v0.22.0, ForwardDiff v0.10.12, and PyPlot v0.2.9.0 (if you do
 not have much experience in setting up project environments in the Julia
 language have a look at [this][envsetup] post and posts linked there). In the
 example of R code it was run under R 4.0.2 and e1071 version 1.7-3.
+
+The Julia codes presented in this post are also available as a Jupyter notebook
+[here][ipynbfile].
 
 # The model
 
@@ -458,7 +461,6 @@ used (try switching to Mersenne Twister that is used in Julia by uncommenting
 relevant lines). Find more on random number generation in Python
 [here](http://numpy.org/doc/stable/reference/random/index.html).
 
-
 #### Rust
 
 [@CGMossa][CGMossa] has prepared a very detailed [Gist][gistmosa] showing his
@@ -483,3 +485,4 @@ out.
 [slack]: https://julialang.slack.com/
 [CGMossa]: https://gist.github.com/CGMossa
 [gistmosa]: https://gist.github.com/CGMossa/dbdd887a7ace8552bb7d68cb5d26aeef
+[ipynbfile]: /assets/2020-09-12-cont.ipynb

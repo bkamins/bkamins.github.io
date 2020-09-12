@@ -15,6 +15,9 @@ the Julia language that will be given by [Przemysław Szufel][psz] and me.
 This time I have decided to present a simple [SIR model][sir] implementation
 using an agent-based design.
 
+The Julia codes presented in this post are also available as a Jupyter notebook
+[here][ipynbfile].
+
 # The SIR epidemic model specification
 
 We assume that we have a finite population of `n` agents that live on a discrete
@@ -390,3 +393,4 @@ to learn about Rust from this code. You can find it [here][rust].
 [perf]: https://docs.julialang.org/en/v1/manual/performance-tips/
 [cgmossa]: https://github.com/CGMossa
 [rust]: https://github.com/CGMossa/bkamins_sir_abm
+[ipynbfile]: /assets/2020-09-12-sir.ipynb

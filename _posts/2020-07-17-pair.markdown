@@ -148,6 +148,13 @@ julia> describe(df, :first => first, :last => last)
 │ 4   │ b        │ 2.71828 │ 2.71828 │
 ```
 
+*DEPRECATION WARNING*
+
+In the 0.22 release of DataFrames.jl `target_column_name => aggregation_function`
+style will be deprecated in favor of `aggregation_function => target_column_name`
+to make it more consistent with other functions allowing `=>` in combination with
+a transformation function.
+
 # Names transformation: `rename!`, `rename`
 
 The form is `source_column => target_column_name` to rename `source_column` to

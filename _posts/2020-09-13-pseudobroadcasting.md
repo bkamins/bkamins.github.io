@@ -9,7 +9,7 @@ categories: julialang
 
 The descriptions I present in this post relate to Julia 1.5 and DataFrames.jl 0.21.
 
-In Julia base the standard rule to do [broacdasting][broadcasting] is to use `.`.
+In Julia base the standard rule to do [broadcasting][broadcasting] is to use `.`.
 For example, as opposed to R this operation fails:
 
 ```

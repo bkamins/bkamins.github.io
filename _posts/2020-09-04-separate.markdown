@@ -20,6 +20,9 @@ pakage.
 The codes were tested under Julia 1.5, DataFrames.jl 0.21,
 and SplitApplyCombine.jl 1.1.
 
+**Update:** The functionalit is available in DataFrames.jl 0.22. See a new
+section at the end below of this post.
+
 # Separating a column
 
 For our example I use the data I have found in [this post][post] about most
@@ -141,6 +144,54 @@ of nesting.
 If you feel that it would be good to have an in-built function in DataFrames.jl
 that would do splitting of columns in a data frame please leave a comment in
 [this issue][issue].
+
+# DataFrames.jl 0.22 functionality
+
+You can do column splitting easily in DataFrames.jl 0.22 like this:
+
+```
+julia> using DataFrames
+
+julia> df = DataFrame(name=["James Smith", "Michael Smith", "Robert Smith",
+                                   "Maria Garcia", "David Smith", "Maria Rodriguez",
+                                   "Mary Smith", "Maria Hernandez", "Maria Martinez",
+                                   "James Johnson"],
+                             freq=[38_313, 34_810, 34_269, 32_092, 31_294,
+                                   30_507, 28_692, 27_836, 26_956, 26_850])
+10×2 DataFrame
+ Row │ name             freq
+     │ String           Int64
+─────┼────────────────────────
+   1 │ James Smith      38313
+   2 │ Michael Smith    34810
+   3 │ Robert Smith     34269
+   4 │ Maria Garcia     32092
+   5 │ David Smith      31294
+   6 │ Maria Rodriguez  30507
+   7 │ Mary Smith       28692
+   8 │ Maria Hernandez  27836
+   9 │ Maria Martinez   26956
+  10 │ James Johnson    26850
+
+julia> transform(df, :name => ByRow(split) => [:first, :last])
+10×4 DataFrame
+ Row │ name             freq   first      last
+     │ String           Int64  SubStrin…  SubStrin…
+─────┼──────────────────────────────────────────────
+   1 │ James Smith      38313  James      Smith
+   2 │ Michael Smith    34810  Michael    Smith
+   3 │ Robert Smith     34269  Robert     Smith
+   4 │ Maria Garcia     32092  Maria      Garcia
+   5 │ David Smith      31294  David      Smith
+   6 │ Maria Rodriguez  30507  Maria      Rodriguez
+   7 │ Mary Smith       28692  Mary       Smith
+   8 │ Maria Hernandez  27836  Maria      Hernandez
+   9 │ Maria Martinez   26956  Maria      Martinez
+  10 │ James Johnson    26850  James      Johnson
+```
+
+(also note that the text/plain display has changed to save more horizontal space
+(in the output)
 
 [df]: https://github.com/JuliaData/DataFrames.jl
 [separate]: https://tidyr.tidyverse.org/reference/separate.html

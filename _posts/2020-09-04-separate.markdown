@@ -21,7 +21,7 @@ The codes were tested under Julia 1.5, DataFrames.jl 0.21,
 and SplitApplyCombine.jl 1.1.
 
 **Update:** The functionality is available in DataFrames.jl 0.22. See a new
-section at the end below of this post.
+section at the end of this post.
 
 # Separating a column
 

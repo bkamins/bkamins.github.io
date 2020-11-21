@@ -10,8 +10,9 @@ DataFrames.jl release 0.21, which you can find [here][part1].
 
 # New material
 
-I have created two additional notebooks that can be downloaded from
-[this GitHub Gist][gist].
+I have created two additional notebooks that can be downloaded from [this GitHub
+Gist][gist]. (Update! this Gist has been updated to DataFrames.jl version 0.22
+after its release)
 
 The content is shared as two notebooks:
 

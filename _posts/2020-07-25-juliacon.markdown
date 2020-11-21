@@ -16,7 +16,7 @@ scale simulation of transportation networks using Julia. You can find the
 details [here][graphs].
 
 The second talk is a tutorial is about DataFrames.jl indexing and you can find
-more information about it [here][https://live.juliacon.org/talk/8SFYHK]. In
+more information about it [here](https://live.juliacon.org/talk/8SFYHK). In
 particular the materials that I will cover during this talk are available for
 download on GitHub [here][dfrepo].
 

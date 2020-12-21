@@ -7,7 +7,7 @@ categories: julialang
 
 # Introduction
 
-As it is end-of-year I thought of writing a longer post that would be useful
+As it is end-of-year I thought of writing a longer post that would be a useful
 reference to [DataFrames.jl][df] users.
 
 In DataFrames.jl we have five functions that can be used to perform

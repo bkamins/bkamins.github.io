@@ -12,7 +12,7 @@ reference to [DataFrames.jl][df] users.
 
 In DataFrames.jl we have five functions that can be used to perform
 transformations of columns of a data frame:
-* `combine` create a new `DataFrame` populated with columns that are results of
+* `combine`: create a new `DataFrame` populated with columns that are results of
   transformations applied to the source data frame columns;
 * `select`: create a new `DataFrame` that has the same number of rows as the
   source data frame populated with columns that are results of transformations

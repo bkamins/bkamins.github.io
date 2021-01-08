@@ -1,21 +1,21 @@
 ---
 layout: post
 title:  "Why DataFrame is not type stable and when it matters"
-date:   2020-12-24 06:51:35 +0200
+date:   2021-01-08 16:11:35 +0200
 categories: julialang
 ---
 
 # Introduction
 
-One of the most frequent performance issues with [DataFrames.jl][df] is that the
-`DataFrame` object is not type stable. [Here][so] is a recent question on Stack
-Overflow that originated from this issue. Experienced Julia users are aware of
-the trade-offs I discuss here, but they are often surprising for people starting
-to use DataFrames.jl.
+One of the most frequent performance questions related to [DataFrames.jl][df]
+are caused by the fact that the `DataFrame` object is not type stable.
+[Here][so] is a recent question on Stack Overflow that originated from this
+issue. Experienced Julia users are aware of the trade-offs I discuss here, but
+they are often surprising for people starting to use DataFrames.jl.
 
-In this post I will want to cover the following issues: a) what does it actually
-mean that `DataFrame` is not type stable, b) what positive consequences it has,
-c) when type instability hits the user most and how to handle it.
+In this post I will want to cover the following issues: a) what does it mean
+that `DataFrame` is not type stable, b) what positive consequences it has, c)
+when type instability hits the user most and how to handle it.
 
 This post was written under Julia 1.5.3, DataFrames.jl 0.22.2, and Tables 1.2.2.
 
@@ -36,15 +36,16 @@ The `columns` field stores the vectors that constitute the data frame, and the
 We can see two crucial things in this definition:
 * the bad: `columns` has element type `AbstractVector`, breaking the most
   fundamental rule from [the Julia Manual][perf] about writing high-performance
-  Julia code; this design means that we extract a column from a `DataFrame` the
-  Julia compiler is not able to infer its type (and in consequence is not able
-  to produce the most efficient code);
+  Julia code; this design means that when we extract a column from a `DataFrame`
+  the Julia compiler is not able to infer its type (and in consequence is not
+  able to produce the most efficient code);
 * the good: the `DataFrame` type does not have parameters; this means that if
   you run some function once on a data frame it does not have to be recompiled
   later for any `DataFrame` you might pass to it (no matter what columns it
   would contain); it also means that it is possible to efficiently precompile
   many of the functions in the package with known signatures to reduce
-  *the time to first result*.
+  *the time to first result*; finally --- you are free to add or remove columns
+  from a `DataFrame` in-place.
 
 The simplest type-stable type that can work similarly to a `DataFrame` is a
 `NamedTuple` of vectors. However, it should be stressed that this type-stability
@@ -209,12 +210,12 @@ in practice).
 
 There is one additional consideration that favors making the `DataFrame` type
 type-unstable, and it is related to allowing to change the schema of the data
-frame in-place. What does **changing schema** actually mean? Well --- many
-things users typically want to do in-place:
+frame in-place. What does *changing schema* mean? Well --- many things users
+typically want to do in-place:
 * renaming columns of a data frame;
 * adding/replacing/removing columns of a data frame;
 * using a long list of functions ending with `!` in DataFrames.jl (that
-  essentially do one or both of the operations above).
+  essentially do one or both of the operations listed above).
 
 # When it really matters that `DataFrame` is not type stable?
 
@@ -280,13 +281,14 @@ julia> DataFrame(tbl, copycols=false)
    2 │     2      4
 ```
 
-(I used `copycols=false` to avoid copying of the columns --- so again the
-(process is cheap; note, however, that by default the `DataFrame` constructor
-copies columns passed to it as it is a safer approach).
+I used `copycols=false` to avoid copying of the columns --- so again the
+process is cheap; note, however, that by default the `DataFrame` constructor
+copies columns passed to it as it is a safer approach.
 
-So when does type stability really matter? The answer is when you need to
-iterate rows of a data frame (especially as in a typical data frame there are
-many times more rows than columns).
+So when does type stability matter most? The answer is when you need to iterate
+rows of a data frame (especially as in a typical data frame there are many times
+more rows than columns). Note that iterating a data frame cell by cell (i.e.
+extracting single values from it) is essentially the same case.
 
 Why it is a problem? Well --- the issue is that when you extract a row from a
 `DataFrame` it is still type unstable `DataFrameRow` object (the reason is
@@ -334,9 +336,10 @@ julia> @time [row[1] for row in Tables.namedtupleiterator(df)];
 
 So the sort conclusion is --- you should expect to be most significantly
 influenced by the performance degradation due to type-instability of `DataFrame`
-if you want to iterate rows. However, in such cases you can use e.g.
-`Tables.columntable` or `Tables.namedtupleiterator` to easily switch to
-type-stable mode (there is also `@eachrow` macro in [DataFramesMeta.jl][dfm]).
+if you want to iterate rows (or access single cells). However, in such cases you
+can use e.g. `Tables.columntable` or `Tables.namedtupleiterator` to easily
+switch to type-stable mode (there is also `@eachrow` macro in
+[DataFramesMeta.jl][dfm]).
 
 As you saw above this was the approach that allowed to resolve the
 [question][so] asked on Stack Overflow.
@@ -352,8 +355,8 @@ its schema), a practical pattern is to:
 * work with `DataFrame` most of the time (and accept paying a small cost of its
   type instability)
 * when you really need performance (and especially when you need to iterate rows
-  of the data frame) temporarily switch to type-stable mode (actually this is
-  what `select` does internally when you use the `ByRow` wrapper on a function)
+  of the data frame) temporarily switch to type-stable mode (this is what
+  `select` does internally when you use the `ByRow` wrapper on a function)
 
 [df]: https://github.com/JuliaData/DataFrames.jl
 [so]: https://stackoverflow.com/questions/65584387/julia-csv-write-very-memory-inefficient

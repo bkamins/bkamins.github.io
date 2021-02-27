@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "How do check package version?"
+title:  "How to check the version of a package?"
 date:   2021-02-27 15:14:22 +0200
 categories: julialang
 ---

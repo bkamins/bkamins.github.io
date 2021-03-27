@@ -63,7 +63,7 @@ julia> example(1.0, 1.0)
 ERROR: MethodError: no method matching example(::Float64, ::Float64)
 ```
 
-So when does the implicit conversion happen? Again the maunal explains it [here][called]:
+So when does the implicit conversion happen? Again the manual explains it [here][called]:
 
 > * Assigning to an array converts to the array's element type.
 > * Assigning to a field of an object converts to the declared type of the field.
@@ -166,9 +166,55 @@ As a final note --- I think Julia 1.6 manual is really a great resource
 (half-way of writing this post I considered to stop it as the manual
 is so clear about the rules).
 
+# Edit
+
+After publishing this post I had a discussion on how what I describe here
+compares to C#, which distinguishes implicit and explicit conversions, see
+[here][csharp]. Without going into all the details (they are explained in the
+referenced documentation) in practice the most important rule in C# is:
+
+> Predefined C# implicit conversions always succeed and never throw an exception.
+> User-defined implicit conversions should behave in that way as well.
+> If a custom conversion can throw an exception or lose information,
+> define it as an explicit conversion.
+
+which is not the case with `convert` function in Julia. On the other hand
+implicit conversions also occur in method invocations in C# (again - this is not
+the case in Julia).
+
+We have discussed the method invocation case above, so let me give examples of
+`convert` use in Julia that would not be allowed in C# implicit conversions.
+
+In the first one the conversion throws an error.
+
+```
+julia> convert(Bool, 1) # we see that the conversion method is defined
+true
+
+julia> convert(Bool, 2) # but it can throw an error
+ERROR: InexactError: Bool(2)
+```
+
+In the second one the conversion looses information.
+
+```
+julia> x = eps()
+2.220446049250313e-16
+
+julia> y = convert(Float16, x) # we lost information due to rounding
+Float16(0.0)
+```
+
+So, to avoid the ambiguity of meaning against the understanding of implicit vs
+explicit conversion in other programming languages, I think it is simplest to
+have the following mental model: in Julia users are allowed to define `convert`
+methods for their types and there is a precise list of situations (given above
+in my post) when the `convert` function is invoked Julia Base.
+
 [release]: https://github.com/JuliaData/DataFrames.jl/releases/tag/v0.22.6
 [j06]: https://docs.julialang.org/en/v0.6/manual/constructors/#constructors-and-conversion-1
 [issue]: https://github.com/JuliaLang/julia/pull/23273
 [conversion]: https://docs.julialang.org/en/v1/manual/conversion-and-promotion/#Conversion
 [called]: https://docs.julialang.org/en/v1/manual/conversion-and-promotion/#When-is-convert-called?
 [last]: https://docs.julialang.org/en/v1/manual/conversion-and-promotion/#Conversion-vs.-Construction
+[csharp]: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/language-specification/conversions

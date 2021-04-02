@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Poor man's guide despecialization"
+title:  "Poor man's guide to despecialization"
 date:   2021-04-02 11:17:49 +0200
 categories: julialang
 ---

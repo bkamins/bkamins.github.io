@@ -237,7 +237,7 @@ julia> mx = rand(10000, 100);
 
 julia> df = DataFrame(mx, :auto);
 
-julia> mycor(df) = [cor(x, y) for x in eachcol(df), y in eachcol(df)]
+julia> mycor(src) = [cor(x, y) for x in eachcol(src), y in eachcol(src)]
 mycor (generic function with 1 method)
 
 julia> mycor(mx); @time mycor(mx);

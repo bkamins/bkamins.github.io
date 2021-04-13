@@ -237,13 +237,13 @@ julia> mx = rand(10000, 100);
 
 julia> df = DataFrame(mx, :auto);
 
-julia> cor_df(df) = [cor(x, y) for x in eachcol(df), y in eachcol(df)]
-cor_df (generic function with 1 method)
+julia> mycor(df) = [cor(x, y) for x in eachcol(df), y in eachcol(df)]
+mycor (generic function with 1 method)
 
-julia> cor(mx); @time cor(mx);
-  0.007407 seconds (12 allocations: 7.708 MiB)
+julia> mycor(mx); @time mycor(mx);
+  0.062812 seconds (2 allocations: 78.203 KiB)
 
-julia> cor_df(df); @time cor_df(df);
+julia> mycor_df(df); @time mycor(df);
   0.067229 seconds (60.10 k allocations: 1.911 MiB)
 ```
 

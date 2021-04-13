@@ -243,7 +243,7 @@ mycor (generic function with 1 method)
 julia> mycor(mx); @time mycor(mx);
   0.062812 seconds (2 allocations: 78.203 KiB)
 
-julia> mycor_df(df); @time mycor(df);
+julia> mycor(df); @time mycor(df);
   0.067229 seconds (60.10 k allocations: 1.911 MiB)
 ```
 

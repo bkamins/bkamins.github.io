@@ -13,7 +13,7 @@ The major question we should answer following this is:
 > What consequences for users does this have?
 
 The answer is pretty boring (but significant): you can expect that we will
-not introduce any braking changes till 2.0 release. The point is that we judge
+not introduce any breaking changes till 2.0 release. The point is that we judge
 that the package is mature enough that 2.0 release will not happen soon.
 In consequence it is safe to use DataFrames.jl in production code that is expected
 not to be updates over longer periods.

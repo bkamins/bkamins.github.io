@@ -153,6 +153,17 @@ julia> df
    3 │   120
 ```
 
+The reason why we see this result is that you are allowed to `convert` values
+that have `Char` type to `Int` type:
+
+```
+julia> convert(Int, 'x')
+120
+```
+
+and since the column `:a` already exists in our data frame and has `Int` element
+type broadcasting silently performs the conversion and updates the column in-place.
+
 In short, as you can see, `df.col = value` syntax works in-place under Julia 1.6.
 In this [post][bd] I have discussed in detail why we decided to change it.
 But one of the major reasons is to allow for:

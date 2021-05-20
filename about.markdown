@@ -12,6 +12,9 @@ plase contact me via:
 * e-mail me at [bkamins@sgh.waw.pl][email]
 * ask me a question on [Julia Slack][slack]
 
+In particular I would appreciate if you let me know when some old posts
+become outdated or are unclear as I would like to fix such issues.
+
 &nbsp;
 
 The codes presented in this blog are licensed under the MIT License:

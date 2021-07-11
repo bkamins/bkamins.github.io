@@ -51,7 +51,8 @@ examples for `GroupedDataFrame` only in cases when it is especially relevant (in
 order to read these parts of the post please earlier check out how `groupby`
 function works in DataFrames.jl).
 
-This post is written under Julia 1.5.3 and DataFrames.jl 0.22.2.
+This post is written under Julia 1.5.3 and DataFrames.jl 0.22.2 (it was also
+checked to work correctly on Julia 1.6.1 and DataFrames.jl 1.2.0).
 
 The data frame that we are going to use in our examples is defined follows
 (I sampled some random data to populate it, with the exception of one name
@@ -201,7 +202,7 @@ ERROR: ArgumentError: New columns must have the same length as old columns
 ```
 
 Let us discuss one more example, this case using `GroupedDataFrame`. As you
-can see below vectors get expanded into multiple columns by default, e.g.:
+can see below vectors get expanded into multiple rows by default, e.g.:
 
 ```
 julia> combine(groupby(df, :eye),

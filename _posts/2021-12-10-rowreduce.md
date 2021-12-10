@@ -102,7 +102,7 @@ a `NamedTuple` is passed to `extrema`. The result gets computed, but, as you
 can see in the output of `@time` the compilation time for the first call is huge,
 and also after compilation it is faster to work with `collect` version.
 
-# A use-case from practice?
+# A use-case from practice
 
 The task recently asked on Slack is the following. We have again a data frame
 that has 10,000 rows and columns, but this time we have 50% of missing values

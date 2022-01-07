@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "News features in DataFrames.jl 1.3: part 2"
+title:  "New features in DataFrames.jl 1.3: part 2"
 date:   2021-12-17 08:41:53 +0200
 categories: julialang
 ---

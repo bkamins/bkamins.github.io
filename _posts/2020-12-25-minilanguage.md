@@ -59,6 +59,8 @@ The data frame that we are going to use in our examples is defined follows
 to celebrate [this][game] recent masterpiece):
 
 ```
+julia> using DataFrames
+
 julia> df = DataFrame(id = 1:6,
                       name = ["Aaron Aardvark", "Belen Barboza",
                               "春 陈", "Даниил Дубов",
@@ -475,17 +477,17 @@ returned from a transformation function. Here is a more advanced example:
 
 ```
 julia> select(df,
-              :name => ByRow(x -> (; ([:firsname, :lastname] .=> split(x))...)))
+              :name => ByRow(x -> (; ([:firstname, :lastname] .=> split(x))...)))
 6×1 DataFrame
  Row │ name_function
      │ NamedTuple…
 ─────┼───────────────────────────────────
-   1 │ (firsname = "Aaron", lastname = …
-   2 │ (firsname = "Belen", lastname = …
-   3 │ (firsname = "春", lastname = "陈…
-   4 │ (firsname = "Даниил", lastname =…
-   5 │ (firsname = "Elżbieta", lastname…
-   6 │ (firsname = "Felipe", lastname =…
+   1 │ (firstname = "Aaron", lastname = …
+   2 │ (firstname = "Belen", lastname = …
+   3 │ (firstname = "春", lastname = "陈…
+   4 │ (firstname = "Даниил", lastname =…
+   5 │ (firstname = "Elżbieta", lastname…
+   6 │ (firstname = "Felipe", lastname =…
 ```
 
 In the above code we have used the following pattern that is a convenient way
@@ -505,18 +507,18 @@ adding `AsTable` as target column names specifier:
 
 ```
 julia> select(df, :name =>
-                  ByRow(x -> (; ([:firsname, :lastname] .=> split(x))...)) =>
+                  ByRow(x -> (; ([:firstname, :lastname] .=> split(x))...)) =>
                   AsTable)
 6×2 DataFrame
- Row │ firsname   lastname
-     │ SubStrin…  SubStrin…
-─────┼───────────────────────
-   1 │ Aaron      Aardvark
-   2 │ Belen      Barboza
-   3 │ 春         陈
-   4 │ Даниил     Дубов
-   5 │ Elżbieta   Elbląg
-   6 │ Felipe     Fittipaldi
+ Row │ firstname   lastname
+     │ SubStrin…   SubStrin…
+─────┼────────────────────────
+   1 │ Aaron       Aardvark
+   2 │ Belen       Barboza
+   3 │ 春          陈
+   4 │ Даниил      Дубов
+   5 │ Elżbieta    Elbląg
+   6 │ Felipe      Fittipaldi
 ```
 
 In general it is not required that one has to produce a vector of `NamedTuple`s
@@ -542,17 +544,17 @@ generated automatically as `:x1` and `:x2`. You can override this behavior by
 specifying the target column names explicitly:
 
 ```
-julia> select(df, :name => ByRow(split) => [:firsname, :lastname])
+julia> select(df, :name => ByRow(split) => [:firstname, :lastname])
 6×2 DataFrame
- Row │ firsname   lastname
-     │ SubStrin…  SubStrin…
-─────┼───────────────────────
-   1 │ Aaron      Aardvark
-   2 │ Belen      Barboza
-   3 │ 春         陈
-   4 │ Даниил     Дубов
-   5 │ Elżbieta   Elbląg
-   6 │ Felipe     Fittipaldi
+ Row │ firsntame   lastname
+     │ SubStrin…   SubStrin…
+─────┼────────────────────────
+   1 │ Aaron       Aardvark
+   2 │ Belen       Barboza
+   3 │ 春          陈
+   4 │ Даниил      Дубов
+   5 │ Elżbieta    Elbląg
+   6 │ Felipe      Fittipaldi
 ```
 
 Several values that can be returned by a transformation are treated to produce

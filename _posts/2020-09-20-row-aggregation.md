@@ -22,7 +22,7 @@ julia> using Statistics, DataFrames
 Consider the following `DataFrame`:
 
 ```
-julia> df = DataFrame([1:10^6 for _ in 1:32])
+julia> df = DataFrame([1:10^6 for _ in 1:32], :auto)
 1000000×32 DataFrame. Omitted printing of 26 columns
 │ Row     │ x1      │ x2      │ x3      │ x4      │ x5      │ x6      │
 │         │ Int64   │ Int64   │ Int64   │ Int64   │ Int64   │ Int64   │
@@ -158,7 +158,7 @@ that Julia will give up on specializing the function that is called.
 First we make a bit wider but shorter data frame:
 
 ```
-julia> df = DataFrame([1:10^5 for _ in 1:64])
+julia> df = DataFrame([1:10^5 for _ in 1:64], :auto)
 100000×64 DataFrame. Omitted printing of 57 columns
 │ Row    │ x1     │ x2     │ x3     │ x4     │ x5     │ x6     │ x7     │
 │        │ Int64  │ Int64  │ Int64  │ Int64  │ Int64  │ Int64  │ Int64  │
@@ -286,4 +286,9 @@ track [this issue][issue]. Most likely we will add some new wrappers
 (similar to `AsTable`, but which will be efficient when the aggregation is performed
 across columns of homogeneous types and column name information is not required).
 
+Update on 2020-04-07: In current release of DataFrames.jl (1.3.2 as of time
+of writing this note) performance of row aggregation has been improved, see
+[this PR][pr] for details.
+
 [issue]: https://github.com/JuliaData/DataFrames.jl/issues/2440
+[pr]: https://github.com/JuliaData/DataFrames.jl/pull/2869

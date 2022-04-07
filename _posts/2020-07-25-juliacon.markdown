@@ -12,23 +12,18 @@ I am co-authoring two talks during this event.
 Let me start with one that is not directly DataFrames.jl related, but I think it
 is a nice showcase of situations where Julia shines. It is prepared with
 [Przemysław Szufel][pszufe], where Przemysław shows how one can build a large
-scale simulation of transportation networks using Julia. You can find the
-details [here][graphs].
+scale simulation of transportation networks using Julia.
 
-The second talk is a tutorial is about DataFrames.jl indexing and you can find
-more information about it [here](https://live.juliacon.org/talk/8SFYHK). In
+The second talk is a tutorial is about DataFrames.jl indexing. In
 particular the materials that I will cover during this talk are available for
 download on GitHub [here][dfrepo].
 
 Finally, if you interested in data management related ecosystem in Julia, make
-sure to join [Julia & Data: An Evolving Ecosystem][bof] that is organized by
+sure to join Julia & Data: An Evolving Ecosystem that is organized by
 [Jacob Quinn][qj] for a discussion about its current state and future
 directions.
 
 [juliacon]: https://juliacon.org/2020/
 [pszufe]: https://szufel.pl/en_aboutme.html
-[graphs]: https://live.juliacon.org/talk/GX8QCX
-[df]: https://live.juliacon.org/talk/8SFYHK
 [dfrepo]: https://github.com/bkamins/JuliaCon2020-DataFrames-Tutorial
-[bof]: https://live.juliacon.org/talk/CA3SET
 [qj]: https://github.com/quinnj

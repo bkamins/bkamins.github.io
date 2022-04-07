@@ -19,10 +19,11 @@ We first load the packages that we will need for this Julia session:
 julia> using Statistics, DataFrames
 ```
 
-Consider the following `DataFrame`:
+Consider the following `DataFrame` (if you run this code on DataFrames.jl
+release 1.0 or later use `DataFrame([1:10^6 for _ in 1:32], :auto)`):
 
 ```
-julia> df = DataFrame([1:10^6 for _ in 1:32], :auto)
+julia> df = DataFrame([1:10^6 for _ in 1:32])
 1000000×32 DataFrame. Omitted printing of 26 columns
 │ Row     │ x1      │ x2      │ x3      │ x4      │ x5      │ x6      │
 │         │ Int64   │ Int64   │ Int64   │ Int64   │ Int64   │ Int64   │
@@ -155,10 +156,12 @@ to signal passing a homogeneous part of the row to the aggregation function.
 In some cases, the *positional arguments passing* API also hits a limitation
 that Julia will give up on specializing the function that is called.
 
-First we make a bit wider but shorter data frame:
+First we make a bit wider but shorter data frame
+(if you run this code on DataFrames.jl
+release 1.0 or later use `DataFrame([1:10^5 for _ in 1:64], :auto)`):
 
 ```
-julia> df = DataFrame([1:10^5 for _ in 1:64], :auto)
+julia> df = DataFrame([1:10^5 for _ in 1:64])
 100000×64 DataFrame. Omitted printing of 57 columns
 │ Row    │ x1     │ x2     │ x3     │ x4     │ x5     │ x6     │ x7     │
 │        │ Int64  │ Int64  │ Int64  │ Int64  │ Int64  │ Int64  │ Int64  │

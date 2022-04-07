@@ -221,17 +221,17 @@ likely you **do not want** these packages to change their versions when you add
 a new package as your code might stop working. This is exactly what
 `preserve=PRESERVE_DIRECT` keyword argument safeguards you against.
 
-# When updating packages use `level=UPDATELEVEL_PATCH` option
+# When updating packages use `level=UPLEVEL_PATCH` option
 
 However, if you work on a project for some time the packages that you depend on,
 might have released patches (e.g. bug fixes or documentation enhancements) that
 you want to allow in your project.
 
-You can achieve such an update by running `Pkg.update(level=UPDATELEVEL_PATCH)`.
+You can achieve such an update by running `Pkg.update(level=UPLEVEL_PATCH)`.
 Here is an example of this command run:
 
 {% highlight julia %}
-julia> Pkg.update(level=UPDATELEVEL_PATCH)
+julia> Pkg.update(level=UPLEVEL_PATCH)
    Updating registry at `~/.julia/registries/General`
    Updating git-repo `https://github.com/JuliaRegistries/General.git`
    Updating `~/test_project/Project.toml`
@@ -260,7 +260,7 @@ and you can get help on them by writing e.g. `help add`.
 
 Finally, let me add one more comment, as this issue has raised some discussion.
 The methods I describe for adding packages (with `preserve=PRESERVE_DIRECT`) and
-updating them (with `level=UPDATELEVEL_PATCH`) are meant to be a safe way to
+updating them (with `level=UPLEVEL_PATCH`) are meant to be a safe way to
 perform these operations (so as I have written in the introduction this is an
 option to be aware of). The core idea is that when working with production
 code you want to:

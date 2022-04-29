@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Value mutability in Julia"
+title:  "Values' mutability in Julia"
 date:   2022-04-29 08:21:51 +0200
 categories: julialang
 ---

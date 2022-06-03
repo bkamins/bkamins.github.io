@@ -103,7 +103,7 @@ so the solution feels a bit heavy.
 
 # The fun part
 
-What is the ways I find nice to do this operation then? Here is the approach:
+What is the way I find nice to do this operation then? Here is the approach:
 
 ```
 julia> select(df1, Cols(!=("col")))

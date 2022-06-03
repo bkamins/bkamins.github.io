@@ -13,7 +13,7 @@ pattern in Vim. The post argues that it is not only efficient but fun to
 learn and use.
 
 It reminded me of the structure of the operation specification language
-we have in DataFrames.jl that follows the following pattern:
+we have in DataFrames.jl that follows the pattern:
 ```
 input columns => transformation => output column names
 ```

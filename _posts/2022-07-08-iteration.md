@@ -164,7 +164,7 @@ The operation is also fast. Here it is worth to note two things:
 * we need to use the `flag` helper variable and we cannot use `break` to stop
   the iteration early (in the example I use this does not affect the result
   since `:a` is always less than `:b` so we iterate all rows anyway, but for
-  other data it could matter);
+  other data it could matter).
 
 # Conclusions
 

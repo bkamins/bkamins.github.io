@@ -15,6 +15,7 @@ In this post I want to discuss how modern CPUs behave when you benchmark
 your code by running the same task many times.
 
 In the post I use Julia 1.8.1, BenchmarkTools.jl 1.3.1, and Plots.jl 1.32.1.
+The machine I used has Intel(R) Core(TM) i7–10850H CPU @ 2.70GHz 2.71 GHz processor.
 
 # Modern CPUs learn the task they are asked to execute
 

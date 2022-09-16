@@ -82,8 +82,8 @@ How does it affect the results of using BenchmarkTools.jl? Let us see:
 ```
 julia> using BenchmarkTools
 
-julia> @btime timings_sum($refx);
-  1.362 ms (1 allocation: 144 bytes)
+julia> @btime sum($refx);
+  130.500 μs (0 allocations: 0 bytes)
 ```
 
 As expected - we get the timing that reflects the performance on old data, not

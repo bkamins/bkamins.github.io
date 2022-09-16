@@ -257,7 +257,7 @@ BenchmarkTools.Trial: 5943 samples with 1 evaluation.
 
 We can see that the performance now is comparable. So it is not the issue of new
 memory location. Now the issue is in the data. My CPU seems to be able to learn
-that the vector `x` the `true` and `false` values form a pattern and takes
+that in the vector `x` the `true` and `false` values form a pattern and takes
 advantage of this when executing my code.
 
 # Conclusions

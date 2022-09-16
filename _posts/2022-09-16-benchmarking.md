@@ -143,7 +143,7 @@ this condition).
 Now let us benchmark the `findall` function on a vector having one million
 `Bool` values.
 
-Start with 50% of `true` and 50% of false:
+Start with 50% of `true` and 50% of `false`:
 
 ```
 julia> using Random

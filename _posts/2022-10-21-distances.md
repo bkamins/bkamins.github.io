@@ -296,7 +296,7 @@ so we would be explicitly informed that something went wrong.
 You might ask why, by default, Julia uses the standard matrix multiplication
 algorithm? The reason is what we discussed in the introduction. The faster
 algorithms, like AlphaTensor or [Strassen][strassen], give benefit only if
-multiplication is much more expensive than addition. This inn practice is
+multiplication is much more expensive than addition. This in practice is
 encountered for very large matrices. This is not a typical use case against
 which default linear algebra algorithms in Julia were optimized.
 

@@ -9,7 +9,7 @@ categories: julialang
 
 Recently I have talked with my friend who teaches undergraduate algebra class.
 We discussed how one can show usefulness of matrix multiplication to students.
-At the same time a [paper about AlphaTensor][ap] has been published in nature
+At the same time a [paper about AlphaTensor][at] has been published in nature
 showing how reinforcement learning was used to discover fast matrix
 multiplication algorithms.
 

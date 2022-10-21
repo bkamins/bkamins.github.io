@@ -77,7 +77,7 @@ julia> maximum(g_distances)
 
 Let us look at the plot of the graph:
 
-![Zachary's karate club graph]((/assets/Zachary_karate_club_social_network.png)
+![Zachary's karate club graph](/assets/Zachary_karate_club_social_network.png)
 
 Indeed, we can notice that the graph has one connected component and the biggest
 distance between two nodes is 5, e.g. between nodes 16 and 17.

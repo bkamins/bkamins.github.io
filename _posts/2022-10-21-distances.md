@@ -215,7 +215,7 @@ julia> Base.:(==)(a::Path, b::Path) = a.p == b.p
 
 This time the design is a bit more complex. We denote non-existent path with
 `nothing`. The plus is that clearly multiplication, which involves vector
-concatenation is significantly more expensive than addition (I know it could
+concatenation, is significantly more expensive than addition (I know it could
 be optimized, but I wanted to keep the code simple).
 
 Let us check if indeed still matrix multiplication gives us the desired solution:

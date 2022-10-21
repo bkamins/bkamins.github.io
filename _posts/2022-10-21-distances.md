@@ -77,7 +77,7 @@ julia> maximum(g_distances)
 
 Let us look at the plot of the graph:
 
-![Zachary's karate club graph][zachary]
+![Zachary's karate club graph]((/assets/Zachary_karate_club_social_network.png)
 
 Indeed, we can notice that the graph has one connected component and the biggest
 distance between two nodes is 5, e.g. between nodes 16 and 17.
@@ -311,4 +311,3 @@ new features introduced in DataFrames.jl 1.4, so stay tuned.
 [fwm]: https://en.wikipedia.org/wiki/Semiring
 [karate]: https://en.wikipedia.org/wiki/Zachary%27s_karate_club
 [strassen]: https://en.wikipedia.org/wiki/Strassen_algorithm
-[zachary]: https://en.wikipedia.org/wiki/Zachary%27s_karate_club#/media/File:Zachary_karate_club_social_network.png

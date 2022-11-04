@@ -124,7 +124,6 @@ This is the simplest functionality. The `eachindex` operation adds row number
 in a data frame or per group in a grouped data frame. Here is an example:
 
 ```
-
 julia> combine(df, eachindex, :transaction_id)
 6×2 DataFrame
  Row │ eachindex  transaction_id

@@ -17,9 +17,6 @@ your code by running the same task many times.
 In the post I use Julia 1.8.1, BenchmarkTools.jl 1.3.1, and Plots.jl 1.32.1.
 The machine I used has Intel(R) Core(TM) i7–10850H CPU @ 2.70GHz processor.
 
-Note! In [this post][newpost] I explan new features of `unstack` introduced
-in DataFrames.jl 1.4 release.
-
 # Modern CPUs learn the task they are asked to execute
 
 **First experiment**
@@ -288,5 +285,4 @@ for a discussion on this topic on #becnchmarking channel in [Julia Slack][js].
 [r1]: https://en.wikipedia.org/wiki/CPU_cache
 [r2]: https://en.wikipedia.org/wiki/Branch_predictor
 [js]: https://julialang.org/slack/
-[newpost]: https://bkamins.github.io/julialang/2022/11/18/unstack.html 
 

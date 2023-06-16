@@ -26,7 +26,7 @@ For example if you write `1 + 2` and `1.0 + 2.0` internally different methods of
 `+` are invoked, one working with integers, and the other working with floats.
 
 However, there is one important rule that should be followed. If you add methods
-to some function they should perform a conceptually similar operations. For example,
+to some function they should perform conceptually similar operations. For example,
 `1 + 2` produces `3` and `1.0 + 2.0` produces `3.0`. In both cases an addition was done.
 
 The reason for this rule is that otherwise when you see code like `f(x)` you would not
@@ -79,7 +79,7 @@ in action.
 
 # Combining collections of arrays
 
-I will concentrate here on a simplest (and most often needed scenarios).
+I will concentrate here on the simplest (and most often needed scenarios).
 Assume you have a vector of vectors of equal length:
 
 ```

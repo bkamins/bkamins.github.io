@@ -165,7 +165,7 @@ julia> length(g3)
 3276
 ```
 
-There is a lot of graphs. But most of them are isomorphic. How do we prune them?
+There are a lot of graphs. But most of them are isomorphic. How do we prune them?
 Using the `uhash` function we compute the hash of each graph.
 `uhash` guarantees us that graphs having a different hash are not isomorphic.
 The `g3gdf` is a `GroupedDataFrame` that keeps these graphs grouped by their
@@ -186,10 +186,10 @@ we do over 3000 calls the screen would be flooded by not very useful output).
 
 With the `elist.(noniso3)` we can see what are the edges of the five non-isomorphic
 graphs that exist on 3 edges.
-(and since we have only 5 graphs you can probably convince yourself using pen
-and paper that we have found all possible options)
+(And since we have only 5 graphs you can probably convince yourself using pen
+and paper that we have found all possible options.)
 
-How do we do tis process for larger number of edges.
+How do we do this process for a larger number of edges.
 The same approach would work, but would be much more time consuming (there are
 over 1 million graphs on 7 edges). So we use the following trick, we take the
 non-isomorphic graphs with 3 edges and add one edge to them. We now get graphs
@@ -309,7 +309,7 @@ For me both have their value and were fun.
 If you like such puzzles, and do plan ahead, please consider joining
 us next year. From June 3 to 7, 2024 we are going to host
 the [WAW2024: 19th Workshop on Modelling and Mining Networks][waw2024]
-in SGH Warsaw School of Economics. We invite all enthusiasts of graphs:
+at SGH Warsaw School of Economics. We invite all enthusiasts of graphs:
 both theoreticians and practitioners.
 
 [workshop]: https://mizad.sgh.waw.pl/en/social-networks-complex-systems-workshop-warsaw-june-20-21-2023

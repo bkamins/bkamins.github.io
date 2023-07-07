@@ -51,7 +51,7 @@ julia> df .> 0.5
    5 │ false  false   true  false  false  false
 ```
 
-Now assume we we want to replace all values greater than `0.5` with `0.5` and
+Now assume we want to replace all values greater than `0.5` with `0.5` and
 keep the lower values untouched. This can be done with `ifelse`:
 
 ```
@@ -264,7 +264,7 @@ julia> df2[!, :] .= ifelse.(df .> 0.5, missing, df)
 ```
 
 Note that `df2` originally does not allow `missing` values in any of the columns. Therefore
-`df2 .= ifelse.(df .> 0.5, missing, df)` fails. However replacing `df2 .=` by `df2[!, :] .=`
+`df2 .= ifelse.(df .> 0.5, missing, df)` fails. However, replacing `df2 .=` by `df2[!, :] .=`
 works, because the `!` selector explicitly requests for overwriting of the original columns
 with new ones, possibly changing their types.
 

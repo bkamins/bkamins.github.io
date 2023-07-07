@@ -7,7 +7,7 @@ categories: julialang
 
 # Introduction
 
-Broadcasting, a.k.a. `.` operator, is a powerful feature of Julia that allows you to
+Broadcasting, a.k.a. the `.` operator, is a powerful feature of Julia that allows you to
 easily vectorize any function. Today I want to write about some common broadcasting
 patterns that can be used in DataFrames.jl.
 

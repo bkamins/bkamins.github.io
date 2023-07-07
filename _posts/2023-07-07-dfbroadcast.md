@@ -265,7 +265,7 @@ julia> df2[!, :] .= ifelse.(df .> 0.5, missing, df)
 
 Note that `df2` originally does not allow `missing` values in any of the columns. Therefore
 `df2 .= ifelse.(df .> 0.5, missing, df)` fails. However, replacing `df2 .=` by `df2[!, :] .=`
-works, because the `!` selector explicitly requests for overwriting of the original columns
+works, because the `!` selector explicitly requests overwriting the original columns
 with new ones, possibly changing their types.
 
 # Conclusions

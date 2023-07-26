@@ -192,7 +192,7 @@ independent measures per design point but I do not want to overly complicate
 things):
 
 {% highlight julia %}
-function run_sim(time=10000, n=10000, reps=51)
+function run_sim(time=10000, n=10000)
     df = DataFrame()
     for λ in range(0.01, 0.05, length=51), q in range(0.01, 0.05, length=51)
         push!(df, (λ=λ, q=q, k=cont_run(time, n, λ, q)))

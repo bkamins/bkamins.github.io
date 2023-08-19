@@ -58,7 +58,7 @@ julia> select(df, Cols(startswith("b")))
 
 As you can see, if you pass a function returning a `Bool`
 (such a function is often called a predicate) to `Cols`
-selector you get columns whose names math the condition
+selector you get columns whose names match the condition
 defined by this function.
 
 Today I want to focus on cases when you specify the condition

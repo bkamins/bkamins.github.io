@@ -251,7 +251,7 @@ ERROR: BoundsError: attempt to access 3-element Vector{Float64} at index [4]
 ```
 
 Ah - we can now see where the problem is. We have not covered the case when `iy` is greater than
-length of `y`. It seems we are close. Let us do a final attempt:
+the length of `y`. It seems we are close. Let us make a final attempt:
 
 ```
 function mergesorted(x::T, y::T) where {T<:Vector}

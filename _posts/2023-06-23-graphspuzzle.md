@@ -39,7 +39,7 @@ adjust your strategy conditional on the answer you see to your previous queries.
 What we will want to show is that we need 7 trials. Start with showing
 that 7 tests is enough. To see this notice that we have 4 good batteries.
 Therefore if we split our 8 batteries into three groups there will be one
-group that has two batteries (by the [pigeonhole principle][pig]).
+group that has two good batteries (by the [pigeonhole principle][pig]).
 What we need to do is to show that using 7
 comparisons we can find a pair of good batteries within one of these
 three groups.

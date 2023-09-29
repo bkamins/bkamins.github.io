@@ -51,11 +51,11 @@ Another major resource I have created is my [Julia for Data Analysis][jda] book.
 This resource is learning-oriented. I start it from the basics of the Julia language
 and gradually add more complex elements so that eventually, the reader should be able to:
 
-* Read and write data in various formats
-* Work with tabular data, including subsetting, grouping, and transforming
-* Visualize data
-* Build predictive models
-* Create data processing pipelines
+* read and write data in various formats;
+* work with tabular data, including subsetting, grouping, and transforming;
+* visualize data;
+* build predictive models;
+* create data processing pipelines;
 
 and more.
 
@@ -81,10 +81,10 @@ I strongly prefer implementing the functionality of DataFrames.jl following the 
 of provided functions. Therefore, I believe that we have quite a strong collection of reference materials that make it precise
 how DataFrames.jl functionality is implemented. It is divided into four major parts:
 
-* specification of how types exposed by DataFrames.jl are designed is given [here][rtypes]
-* reference on provided functions can be found [here][rfunctions]
-* a complete description of how indexing works in DataFrames.jl is available [here][rindexing]
-* information on how data frames handle table and column metadata is given [here][rmetadata]
+* specification of how types exposed by DataFrames.jl are designed is given [here][rtypes];
+* reference on provided functions can be found [here][rfunctions];
+* a complete description of how indexing works in DataFrames.jl is available [here][rindexing];
+* information on how data frames handle table and column metadata is given [here][rmetadata].
 
 It is essential to highlight that these materials aim to be complete and precise. Unfortunately, this means
 that they are verbose and sometimes hard to digest by new users. Unfortunately, I think this cannot be helped,

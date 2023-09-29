@@ -88,7 +88,7 @@ how DataFrames.jl functionality is implemented. It is divided into four major pa
 
 It is essential to highlight that these materials aim to be complete and precise. Unfortunately, this means
 that they are verbose and sometimes hard to digest by new users. Unfortunately, I think this cannot be helped,
-and that is why we provide other kinds of documentation to make it easier to get started with DataFrames.jl
+and that is why we provide other kinds of documentation to make it easier to get started with DataFrames.jl.
 
 # Conclusions
 

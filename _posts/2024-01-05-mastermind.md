@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Code cleanup for the New Year"
-date:   2023-12-29 10:13:42 +0200
+date:   2024-01-05 10:13:42 +0200
 categories: julialang
 ---
 

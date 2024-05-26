@@ -29,7 +29,7 @@ The questions are:
 * If only Alice played, how long, on the average, would she wait till `HT` was tossed?
 * If only Bob played, how long, on the average, would she wait till `HH` was tossed?
 
-Let us try to answer this questions using Julia.
+Let us try to answer these questions using Julia.
 
 # Both players play
 

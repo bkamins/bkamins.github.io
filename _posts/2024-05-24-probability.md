@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "A simple coin tossing came"
+title:  "A simple coin-tossing game"
 date:   2024-05-24 06:32:44 +0200
 categories: julialang
 ---
@@ -14,7 +14,7 @@ There is a small change in how I distribute my content. Starting from last week 
 so if you find any mistake please do not hesitate to open a Pull Request [here][repo].
 
 To celebrate this I decided to go back to my favorite topic - mathematical puzzles.
-Today I use a classic coin tossing game example
+Today I use a classic coin-tossing game example
 
 The post was written under Julia 1.10.1 and StatsBase.jl 0.34.4, and FreqTables.jl 0.4.6, BenchmarkTools.jl 1.5.0.
 

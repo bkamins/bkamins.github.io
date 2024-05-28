@@ -13,21 +13,21 @@ My first post was on May 10, 2020, you can find it [here][firstpost].
 There is a small change in how I distribute my content. Starting from last week I made the repository of my blog public,
 so if you find any mistake please do not hesitate to open a Pull Request [here][repo].
 
-To celebrate this I decided to go back to my favorite topic - mathematical puzzles.
-Today I use a classic coin-tossing game example
+To celebrate this I decided to go back to my favorite topic – mathematical puzzles.
+Today I use a classic coin-tossing game example.
 
-The post was written under Julia 1.10.1 and StatsBase.jl 0.34.4, and FreqTables.jl 0.4.6, BenchmarkTools.jl 1.5.0.
+The post was written under Julia 1.10.1, StatsBase.jl 0.34.4, FreqTables.jl 0.4.6, and BenchmarkTools.jl 1.5.0.
 
 # The problem
 
-Assume Alice and Bob toss a fair coin. Alice wins if after tossing a head (`H`) tail (`T`) is tossed, that is we see a `HT` sequence.
-Bob wins if two consecutive heads are tossed, that is we see a `HH` sequence.
+Assume Alice and Bob toss a fair coin. Alice wins if after tossing a head (`H`) tail (`T`) is tossed, that is we see an `HT` sequence.
+Bob wins if two consecutive heads are tossed, that is we see an `HH` sequence.
 
 The questions are:
 
 * Who is more likely to win this game?
 * If only Alice played, how long, on the average, would she wait till `HT` was tossed?
-* If only Bob played, how long, on the average, would she wait till `HH` was tossed?
+* If only Bob played, how long, on the average, would he wait till `HH` was tossed?
 
 Let us try to answer these questions using Julia.
 
@@ -106,10 +106,10 @@ Type:           Int64
 ```
 
 So it seems that, in expectation, Alice finishes her game in 4 tosses.
-Can we expect the same for Ben (as we remember - if they play together they have the same chances of finishing first)?
+Can we expect the same for Ben (as we remember – if they play together they have the same chances of finishing first)?
 Let us see.
 
-# Alice's waiting time
+# Bob's waiting time
 
 Now let us check how long, on the average, Bob has to wait to see the `HH` sequence. Here is Bob's simulator:
 
@@ -146,7 +146,7 @@ Type:           Int64
 To our surprise, Bob needs 6 coin tosses, on the average, to see `HH`.
 
 What is the reason of this difference? Assume we have just tossed `H`. Start with Bob. If we hit `H` we finish. If we hit `T` we then need to wait till we see `H` again to be able to consider finishing.
-However, if we are Alice if we hit `T` we finish, but if we hit `H` we do not have to wait for anything - we are already in a state that gives us a chance to finish the game in the next step.
+However, if we are Alice if we hit `T` we finish, but if we hit `H` we do not have to wait for anything – we are already in a state that gives us a chance to finish the game in the next step.
 
 # Conclusions
 
@@ -154,7 +154,7 @@ The difference between joint games and separate games is a bit surprising and I 
 Today I have approached this problem using simulation. However, it is easy to write down a [Markov chain][mc] representation of all three scenarios and solve them analytically.
 I encourage you to try doing this exercise.
 
-PS.
+PS:
 
 In the code I use the `rand(('H', 'T'))` form to generate randomness. It is much faster than e.g. writing `rand(["H", "T"])` (which would be a first instinct), for two reasons:
 

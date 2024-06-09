@@ -67,6 +67,10 @@ had both `3` occurrences of `hh` and `ht`, so it is a tie.
 Here is a simulator that, for a given `n`, runs the game `reps` times and aggregates the results:
 
 ```
+using DataFrames
+using Statistics
+using StatsBase
+
 function sim_play(n::Integer, reps::Integer)
     df = DataFrame([play(n) for _ in 1:reps])
     df.winner = cmp.(df.hh, df.ht)
@@ -112,7 +116,7 @@ julia> reduce(vcat, [sim_play(n, 1_000_000) for n in 2:16])
   15 │    16  3.75258   3.7513    2.13521   1.03027      0.538056   0.000772964  0.463627  0.142931  0.393442
 ```
 
-What do we learn from these results.
+What do we learn from these results?
 
 On the average `hh` and `ht` occur the same number of times.
 We see this from `"hh_mean"` and `"ht_mean"` columns.

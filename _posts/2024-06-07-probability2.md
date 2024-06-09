@@ -135,7 +135,7 @@ The core reason for this behavior was discussed in [my previous post][post]. The
 
 # Conclusions
 
-I hope you found this puzzle interesting. If you are interested how the properties we described can be proven analytically I recommend you check out [this paper].
+I hope you found this puzzle interesting. If you are interested how the properties we described can be proven analytically I recommend you check out [this paper][analytical].
 
 [post]: https://bkamins.github.io/julialang/2024/05/24/probability.html
 [mini]: https://bkamins.github.io/julialang/2020/12/24/minilanguage.html
